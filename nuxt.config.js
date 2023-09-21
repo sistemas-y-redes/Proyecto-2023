@@ -14,7 +14,7 @@ export default {
    //target: "server",
    
   head: {
-    title: 'Gemahe',
+    title: 'Proyecto 2023',
     htmlAttrs: {
       lang: 'es'
     },
@@ -80,10 +80,10 @@ export default {
     }
   },
   env: {
-    base_url: process.env.MODE == 'desarrollo' ? 'http://192.168.200.125:3000/' : 'https://app.gemaheprojectsbaleares.com/',
+    base_url: process.env.MODE == 'desarrollo' ? 'http://192.168.200.125:3000/' : 'https://proyecto2023.aplicacionesinteligentes.es/',
   },
   axios: {
-    baseURL: process.env.MODE == 'desarrollo' ? 'http://192.168.200.125:3000/' : 'https://app.gemaheprojectsbaleares.com/',
+    baseURL: process.env.MODE == 'desarrollo' ? 'http://192.168.200.125:3000/' : 'https://proyecto2023.aplicacionesinteligentes.es/',
     proxy: true
   },
   server: {
@@ -92,12 +92,12 @@ export default {
   },
   pwa: {
     meta: {
-      title: 'Gemahe',
+      title: 'Proyecto 2023',
       author: 'Sistemas y Redes',
     },
     manifest: {
-      name: 'Gemahe',
-      short_name: 'Gemahe',
+      name: 'Proyecto 2023',
+      short_name: 'SYR',
       lang: 'es',
     },
   },
