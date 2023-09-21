@@ -66,7 +66,7 @@ usersModel.doLogin = async ({ usuario, password }) => {
       username: usuario,
       password,
       fmtoken,
-      codMobra: userdata.data.response.data[0].fieldData.CodMobra
+      //codMobra: userdata.data.response.data[0].fieldData.CodMobra
     }
     
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "24h" });
@@ -81,7 +81,7 @@ usersModel.doLogin = async ({ usuario, password }) => {
       console.log('Headers:', error.response.headers);
       */
     }
-    throw new Error('Error durante el inicio de sesión.');
+    return error
   }
 }
 

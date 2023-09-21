@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
     if (!token) {
         res.writeHead(401);
         res.end("token nulo");
-        return;
+        return "no hay token";
     }
 
     res.end(JSON.stringify(token));

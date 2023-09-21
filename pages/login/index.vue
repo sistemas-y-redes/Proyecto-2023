@@ -63,6 +63,7 @@ export default {
         const response = await this.$axios.$post('/api/usuarios/login', credenciales)
         
         if (response) {
+          console.log(response)
           this.login = false;
           this.$cookies.set("TOKEN", response);
           this.$store.commit('saveUser', credenciales.usuario);
@@ -102,7 +103,7 @@ export default {
   height: 500px;
 }
 .logo-login {
-  max-width: 150px;
+  max-width: 250px;
 }
 #submit {
   background-color: black;
