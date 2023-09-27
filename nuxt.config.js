@@ -25,7 +25,7 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/icon.jpg' }
+      { rel: 'icon', type: 'image/png', href: '/icon.png' }
     ]
   },
 
@@ -100,5 +100,8 @@ export default {
       short_name: 'SYR',
       lang: 'es',
     },
+    icon: {
+      fileName: 'icon.png',
+    }
   },
 }
