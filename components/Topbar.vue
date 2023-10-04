@@ -80,7 +80,7 @@ export default {
   fill: red;
 }
 .logo {
-  width: 100px;
+  width: 200px;
 }
 .swal2-title{ font-size: 1.25rem ! important; }
 

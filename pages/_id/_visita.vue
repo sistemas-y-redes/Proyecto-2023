@@ -195,7 +195,7 @@
                   ><b-icon icon="calendar4"></b-icon>
                   {{ convertirFecha(visita.visitaFieldata["FechaPrevista"]) }}
                 </b-badge>
-                <b-badge>Categoría: Intervención</b-badge>
+                <b-badge>Categoría: {{ visita.visitaFieldata["Origen"]}}</b-badge>
               </div>
             </div>
           </div>

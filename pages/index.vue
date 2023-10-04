@@ -28,8 +28,10 @@
 
           <div class="mx-4 my-2">
             <NuxtLink :to="`${visita.fieldData.NumeroServicio.replace('/', '')}`">
-              <small class="num-visita">{{ visita.fieldData.Numero }}</small>
-              <br>
+              <div class="d-flex align-center mb-2" style="height:20px">
+                <small class="num-visita" style="line-height:1.2">{{ visita.fieldData.Numero }} </small> <b-badge class="ml-2" :variant="visita.fieldData.TipoSat == 'REPARACIÓN' ? 'primary' : visita.fieldData.TipoSat == 'MANTENIMIENTO' ? 'success' : 'danger' ">{{visita.fieldData.TipoSat}}</b-badge>
+              </div>
+
               <span class="nombre-cliente">{{ visita.fieldData["Cliente"] }}</span>
             
               <p class="texto-tarea">

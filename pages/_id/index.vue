@@ -199,7 +199,7 @@
                   ><b-icon icon="clock"></b-icon>
                   {{ corregirHoras(visita.visitaFieldata["Hora"]) }}</b-badge
                 >
-                <b-badge>Tipo: {{ visita.visitaFieldata["Tipo"] }}</b-badge>
+                <b-badge>Origen: {{ visita.visitaFieldata["Origen"] }}</b-badge>
                 <b-badge>Categoría: Intervención</b-badge>
               </div>
             </div>
