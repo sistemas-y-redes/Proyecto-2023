@@ -42,7 +42,7 @@
         </div>
 
         <div class="boton-carga-parent">
-          <div class="boton-carga-parent">
+          <div class="boton-carga-parent d-flex">
             <button
               v-if="limite < this.visitas.length"
               style="z-index: 9"
@@ -51,9 +51,15 @@
             >
               Cargar más
             </button>
-            <span class="ml-1" v-if="limite >= this.visitas.length"
+            <span style="width:55%" v-if="limite >= this.visitas.length"
               >Límite {{ this.visitas.length }} registros alcanzado</span
-            >
+            > 
+            <div  class="d-flex" style="width:30%;">
+              
+                <NuxtLink to="/fichar" class="text-white boton-carga text-center"> Registro horario </NuxtLink>
+            
+            </div>
+            
             <button
               v-if="limite > 5"
               style="z-index: 9"
@@ -64,8 +70,9 @@
             </button>
           </div>
         </div>
+        
       </div>
-
+      
       <div v-if="this.loading === true" class="spinner-parent">
         <div
           class="spinner-border ml-auto"

@@ -8,7 +8,10 @@ export default async ({ $axios, store, redirect, app, route }) => {
             headers: { Authorization: `Bearer ${jwtToken}` }
         });
 
-        if (res) store.commit('saveUser', res.data.username);
+        if (res) {
+            store.commit('saveUser', res.data.username);
+            store.commit('saveEmpleado', res.data.empleadoNombre);
+        }
     } catch (error) {
         app.$cookies.set("TOKEN", "");
         redirect('/login')

@@ -22,10 +22,19 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      {
+        name: 'apple-mobile-web-app-capable',
+        content: 'yes'
+      },
+      {
+        name: 'apple-mobile-web-app-status-bar-style',
+        content: 'black-translucent'
+      },
     ],
     link: [
-      { rel: 'icon', type: 'image/png', href: '/icon.png' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico?v=2' },
+      { rel:'apple-touch-icon', type:'image/png', href: `${process.env.MODE == 'desarrollo' ? 'http://192.168.200.125:3000/' : 'https://proyecto2023.aplicacionesinteligentes.es/'}apple-touch-icon.png` }
     ]
   },
 
@@ -101,7 +110,9 @@ export default {
       lang: 'es',
     },
     icon: {
+      source:'/icon.png',
       fileName: 'icon.png',
     }
   },
 }
+/* https://stackoverflow.com/questions/59460657/cannot-show-apple-touch-icon-in-bookmarks-with-nuxt-js-app/64959404#64959404 */

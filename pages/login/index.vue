@@ -66,7 +66,7 @@ export default {
           console.log(response)
           this.login = false;
           this.$cookies.set("TOKEN", response);
-          this.$store.commit('saveUser', credenciales.usuario);
+          this.$store.commit('saveUser', credenciales);
           this.$router.push('/');
         }
       } catch (error) {

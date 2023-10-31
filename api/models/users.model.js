@@ -18,7 +18,6 @@ usersModel.doLogin = async ({ usuario, password }) => {
       })
 
     if (respuesta) {
-      //console.log(respuesta)
       visitasModel.usuario = usuario;
     }
 
@@ -33,7 +32,6 @@ usersModel.doLogin = async ({ usuario, password }) => {
         ]
       };
 
-      //console.log('queryBody:', queryBody);  // Depuración: imprime el cuerpo de la petición
 
       const userdata = await axios.post(`https://${serverName}/fmi/data/v1/databases/Acceso/layouts/PersonalAPI/_find`,
         queryBody,
@@ -42,21 +40,7 @@ usersModel.doLogin = async ({ usuario, password }) => {
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fmtoken}` },
         }
       );
-    /*let userdata = await axios.post(`https://${serverName}/fmi/data/v1/databases/Acceso/layouts/PersonalAPI/_find`,
-      // Cuerpo
-      {
-        "query": [
-          {
-            "CódigoFM": usuario
-          }
-        ]
-      },
-      // Cabeceras
-      {
-        httpsAgent: httpsAgent,
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fmtoken}` },
-      }
-    )*/
+    
 
     if (!userdata || !userdata.data || !userdata.data.response || !userdata.data.response.data[0]) {
       throw new Error('Datos de usuario inválidos desde la API de FileMaker.');
@@ -66,7 +50,7 @@ usersModel.doLogin = async ({ usuario, password }) => {
       username: usuario,
       password,
       fmtoken,
-      //codMobra: userdata.data.response.data[0].fieldData.CodMobra
+      EmpleadoNombre: userdata.data.response.data[0].fieldData.EmpleadoNombre
     }
     
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "24h" });

@@ -1,6 +1,6 @@
 <template>
   <div class="Topbar">
-    <NuxtLink to="/"><img class="logo" src="/logo.png" /></NuxtLink>
+    <NuxtLink to="/" class="logoImg"><img class="logo" src="/logo.png" /></NuxtLink>
     
     <div class="usuario-options">
       <b-button class="refresh-button" @click="refreshPage()">
@@ -67,6 +67,13 @@ export default {
 .Topbar > * {
   margin: 2rem;
 }
+.logoImg{
+  width: 40%;
+  margin-left: 1rem !important;
+}
+
+
+
 .usuario-options {
   display: flex;
   align-items: center;
@@ -95,5 +102,16 @@ export default {
 
 .refresh-button small {
   padding: 0 4%;
+}
+@media (max-width: 375px) {
+  .logo{
+    width:150px;
+  }
+  .logoImg{
+    width: 30%;
+  }
+  .usuario-options {
+    gap:0.8rem;
+  }
 }
 </style>

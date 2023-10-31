@@ -13,6 +13,7 @@
  const usuarios = require("./controllers/users.controller");
  const visitas = require("./controllers/visitas.controller");
  const images = require("./controllers/images.controller");
+ const fichaje = require("./controllers/fichaje.controller")
  
  // Arrancamos la aplicación de Expresss
  const app = Router();
@@ -26,5 +27,6 @@
  app.use('/api/usuarios', usuarios);
  app.use('/api/visitas', visitas);
  app.use('/api/images', images);
+ app.use('/api/fichaje', fichaje);
  
  module.exports = app;
