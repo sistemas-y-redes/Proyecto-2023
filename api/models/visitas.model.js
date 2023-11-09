@@ -317,6 +317,7 @@ visitasModel.insertarSeguimiento = async (formulario) => {
       NumeroServicioVisita: formulario.NumeroServicio,
       NumeroServicio: formulario.NumeroServicioVisita,
       Tec: formulario.Tec,
+      Tipo:formulario.Tipo,
       Referencia: formulario.referencia,
       "VisitasServicios::TrabajoRealizado": formulario.Descripcion,
     },

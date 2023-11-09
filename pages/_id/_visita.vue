@@ -239,7 +239,7 @@
             </div>
 
             <!-- Contenido de seguimientos -->
-            <div class="div-pestaña" v-if="this.pestañaActiva == 'Histórico'">
+                        <div class="div-pestaña" v-if="this.pestañaActiva == 'Histórico'">
               <b-row
                 v-if="checkHistorico() || this.$store.state.Horas.length > 0"
                 class="lista-historica"
@@ -808,7 +808,7 @@ export default {
       }
     },
     async getVisita() {
-      let token = this.$cookies.get("TOKEN");
+            let token = this.$cookies.get("TOKEN");
       try {
         const visitaid = this.$route.params.visita.replace("/", "");
         this.visita = await this.$axios.$get(
@@ -821,10 +821,8 @@ export default {
         );
         this.visita.visitaFieldata = this.visita[0].fieldData;
         this.visita.VisitasLineas = this.visita[0].portalData.VisitasLineas;
-        this.visita.VisitasFotos =
-          this.visita[0].portalData.VisitasFotosServicios;
-
-        console.log("hola");
+        this.visita.VisitasFotos =this.visita[0].portalData.VisitasFotosServicios;
+        
         if (this.loading === true) {
           this.loading = false;
         }
