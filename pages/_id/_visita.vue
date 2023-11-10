@@ -921,7 +921,7 @@ export default {
   grid-template-columns: repeat(4, 1fr);
   font-weight: bolder;
   max-width: 400px;
-  margin-left: 6px;
+  margin-left: auto;
 }
 .opciones-pestañas > * {
   text-align: center;
@@ -1118,15 +1118,14 @@ export default {
 }
 .añadir {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-right: 10px;
-  position: fixed;
-  bottom: 0;
-  padding-left: 40px;
-  padding-bottom: 42px;
-  font-size: 20px;
-  right: 0;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 10px;
+    position: sticky;
+    bottom: 0;
+    padding-left: 40px;
+    padding-bottom: 42px;
+    font-size: 20px;
 }
 .añadir a,
 .añadir svg {
