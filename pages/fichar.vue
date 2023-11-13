@@ -1,36 +1,37 @@
 <template>
   <div class="nuxt-content">
     <div v-if="this.loading === true" class="spinner-parent">
-        <div
-          class="spinner-border ml-auto"
-          role="status"
-          aria-hidden="true"
-        ></div>
-        <p>Cargando...</p>
-      </div>
+      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+      <p>Cargando...</p>
+    </div>
     <div class="boton-retorno mb-4">
       <NuxtLink to="/">&lt; <span>VOLVER</span></NuxtLink>
     </div>
     <div class="mx-4">
-    <div v-if="!this.ficha && this.loading === false">
-      Este técnico no ha fichado día {{this.formatearFecha(this.dia)}}, ¿deseas fichar?
-    <div class="w-100 d-flex mt-2"><b-button variant="primary" class="mx-auto" @click="setFichaje()">Fichar</b-button></div>
-    </div>
-    <div v-if="this.ficha && !this.loading">
-      <h2 class="text-center">Día: {{this.formatearFecha(this.dia)}}</h2>
-      <b-row class="mt-4">
-        <b-col class="text-center">
-          <div v-if="this.ficha" class="boton-fichar">
-            <b-button :variant="this.ficha[0].fieldData.ETaller ? 'success' : 'danger'" :class="this.ficha[0].fieldData.STaller ? 'disabled' : 'btn-primary'"><b-icon icon="clock" v-if="this.ficha[0].fieldData.ETaller"></b-icon> Entrada</b-button>
-          </div>
-        </b-col>
-        <b-col class="text-center">
-          <div class="boton-fichar">
-            <b-button :variant="this.ficha[0].fieldData.STaller ? 'success' : 'danger'" :class="this.ficha[0].fieldData.STaller ? 'disabled' : 'btn-primary'"  @click="endFichaje()"><b-icon icon="clock" v-if="this.ficha[0].fieldData.STaller"></b-icon> Salida</b-button>
-          </div>
-        </b-col>
-      </b-row>  
-    </div>
+      <div v-if="!this.ficha && this.loading === false">
+        Este técnico no ha fichado día {{ this.formatearFecha(this.dia) }}, ¿deseas fichar?
+        <div class="w-100 d-flex mt-2"><b-button variant="primary" class="mx-auto" @click="setFichaje()">Fichar</b-button>
+        </div>
+      </div>
+      <div v-if="this.ficha && !this.loading">
+        <h2 class="text-center">Día: {{ this.formatearFecha(this.dia) }}</h2>
+        <b-row class="mt-4">
+          <b-col class="text-center">
+            <div v-if="this.ficha" class="boton-fichar">
+              <b-button :variant="this.ficha[0].fieldData.ETaller ? 'success' : 'danger'"
+                :class="this.ficha[0].fieldData.STaller ? 'disabled' : 'btn-primary'"><b-icon icon="clock"
+                  v-if="this.ficha[0].fieldData.ETaller"></b-icon> Entrada</b-button>
+            </div>
+          </b-col>
+          <b-col class="text-center">
+            <div class="boton-fichar">
+              <b-button :variant="this.ficha[0].fieldData.STaller ? 'success' : 'danger'"
+                :class="this.ficha[0].fieldData.STaller ? 'disabled' : 'btn-primary'" @click="endFichaje()"><b-icon
+                  icon="clock" v-if="this.ficha[0].fieldData.STaller"></b-icon> Salida</b-button>
+            </div>
+          </b-col>
+        </b-row>
+      </div>
     </div>
   </div>
 </template>
@@ -45,10 +46,11 @@ export default {
       error: false,
       dia: '',
       fichaId: '',
+      fechaUbiFormat: ''
     };
   },
   methods: {
-    getTodayDate(){
+    getTodayDate() {
       // Obtener la fecha actual
       var fecha = new Date();
 
@@ -64,12 +66,13 @@ export default {
       // Crear la cadena de fecha en el formato deseado
       var fechaFormateada = mes + '-' + dia + '-' + anio;
 
-      this.dia = fechaFormateada
+      this.fechaUbiFormat = mes + '/' + dia + '/' + anio;
+      this.dia = fechaFormateada;
     },
     formatearFecha(fecha) {
       // Dividir la fecha en un array [MM, DD, YYYY]
       var partes = fecha.split('-');
-      
+
       // Verificar si la fecha tiene el formato correcto
       if (partes.length !== 3 || partes[0].length !== 2 || partes[1].length !== 2 || partes[2].length !== 4) {
         return 'Fecha no válida';
@@ -77,7 +80,7 @@ export default {
 
       // Cambiar el orden de los elementos para obtener el formato DD-MM-YYYY
       var nuevaFecha = partes[1] + '-' + partes[0] + '-' + partes[2];
-      
+
       return nuevaFecha;
     },
     agregarCeroSiNecesario(numero) {
@@ -91,6 +94,24 @@ export default {
       var horaFormateada = horas + ':' + minutos + ':' + segundos;
       return horaFormateada;
     },
+    getUserLocation() {
+      if ("geolocation" in navigator) {
+        // La geolocalización está disponible
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position.coords.latitude, position.coords.longitude);
+            // Aquí podrías enviar las coordenadas al backend si es necesario
+          },
+          (error) => {
+            console.error(error);
+            // Manejar errores, por ejemplo, si el usuario no da permiso
+          }
+        );
+      } else {
+        // La geolocalización no está disponible
+        alert('La geolocalización no está disponible en tu navegador.');
+      }
+    },
     async getFichaje() {
       let tec = this.$store.state.User;
       try {
@@ -103,37 +124,39 @@ export default {
             },
           }
         );
-        
-        if(response == 'Vacio!'){
+
+        if (response == 'Vacio!') {
           this.ficha = false;
           return;
-        } 
-      
+        }
+
         this.ficha = response;
         this.fichaId = this.ficha[0].recordId;
         console.log(this.ficha)
-        
+
       } catch (e) {
         this.error = true;
         console.log(e);
       }
       this.loading = false;
     },
-    async setFichaje(){
+    async setFichaje() {
       let tec = this.$store.state.User;
-      let horaActual = this.obtenerHoraActual()
-      console.log(horaActual)
+      let horaActual = this.obtenerHoraActual();
+      let userLocation = this.getUserLocation();
+      console.log('hora actual: ' + horaActual);
+      console.log('ubicacion actual: ' + userLocation);
       try {
-        let response =  await this.$axios.$post(
+        let response = await this.$axios.$post(
           "/api/fichaje/new",
-          { Tec: tec, horaEntrada: horaActual},
+          { Tec: tec, horaEntrada: horaActual, UserLocation: userLocation, fecha: this.fechaUbiFormat },
           {
             headers: {
               Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
             },
           }
         );
-        if(response){
+        if (response) {
           window.location.href = window.location.href
         }
       } catch (e) {
@@ -142,21 +165,22 @@ export default {
       }
       this.loading = false;
     },
-    async endFichaje(id){
+    async endFichaje(id) {
       let tec = this.$store.state.User;
-      let horaActual = this.obtenerHoraActual()
+      let horaActual = this.obtenerHoraActual();
+      let userLocation = this.getUserLocation();
       console.log(horaActual)
       try {
-        let response =  await this.$axios.$patch(
+        let response = await this.$axios.$patch(
           `/api/fichaje/edit/${this.fichaId}`,
-          { horaSalida: horaActual},
+          { horaSalida: horaActual, UserLocation: userLocation, Tec: tec, fecha: this.fechaUbiFormat },
           {
             headers: {
               Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
             },
           }
         );
-        if(response){
+        if (response) {
           window.location.href = window.location.href
         }
       } catch (e) {
@@ -164,8 +188,8 @@ export default {
         console.log(e);
       }
       this.loading = false;
-    }, 
-    
+    },
+
   },
   mounted() {
     console.log(this.$store.state);
@@ -176,8 +200,7 @@ export default {
 };
 </script>
 <style scoped>
-
-.boton-fichar > div > button{
+.boton-fichar>div>button {
   width: 115px;
 }
 </style>

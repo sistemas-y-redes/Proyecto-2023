@@ -157,7 +157,7 @@ router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
    /* const visitaServicio = await visitasModel.getVisitaServicioByRecordId(req.params.id)
     console.log(visitaServicio)*/
 
-    const update = visitasModel.updateVisita(req.params.id);
+    const update = visitasModel.updateVisita(req.params.id, req.body);
 
    if (!update) {
         res.writeHead(500)
