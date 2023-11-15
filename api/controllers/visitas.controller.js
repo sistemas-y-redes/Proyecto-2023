@@ -83,8 +83,28 @@ router.get('/servicio/:id/', [auth.validateAccess], async (req, res) => {
         res.end()
         return
     }
-    console.log(visita)
     res.end(JSON.stringify(visita))
+})
+
+/**
+ * @url /api/visitas/edit/:id
+ * @method  PATCH
+ * @description Llamada que finaliza la tarea de un proyecto en FileMaker
+ * @return {JSON}
+ */
+router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
+    console.log('estoy en el controlador');
+    console.log(req.params.id);
+    console.log(req.body);
+    const update =  await visitasModel.updatevisitas(req.params.id, req.body);
+
+    if (!update) {
+        res.writeHead(500)
+        res.end()
+        return;
+    }
+
+    res.end("visitas: " + req.params.id + " cambiado")
 })
 
 /**
@@ -130,7 +150,6 @@ router.post('/documento',[auth.validateAccess], async (req, res) => {
 router.post('/:id/seguimiento', [auth.validateAccess], async (req, res) => {
     var seguimiento
     
-    console.log(req.body.formulario)
     if (req.body.formulario.Tipo === "M.Obra"){
         seguimiento = await visitasModel.insertarSeguimiento({...req.body.formulario, referencia: req.user.codMobra})
     }
@@ -146,27 +165,5 @@ router.post('/:id/seguimiento', [auth.validateAccess], async (req, res) => {
     }
     res.end(JSON.stringify(seguimiento))
 })
-
-/**
- * @url /api/visitas/edit/:id
- * @method  PATCH
- * @description Llamada que finaliza la tarea de un proyecto en FileMaker
- * @return {JSON}
- */
-router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
-   /* const visitaServicio = await visitasModel.getVisitaServicioByRecordId(req.params.id)
-    console.log(visitaServicio)*/
-
-    const update = visitasModel.updateVisita(req.params.id, req.body);
-
-   if (!update) {
-        res.writeHead(500)
-        res.end()
-        return;
-    }
-
-    res.end("Servicio: " + req.params.id + " terminado")
-})
-
 
 module.exports = router

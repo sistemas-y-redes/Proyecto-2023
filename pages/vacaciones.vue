@@ -280,9 +280,7 @@ export default {
                         },
                     }
                 );
-                console.log(response);
                 if (response) {
-                    console.log(response);
                     Swal.fire({
                         icon: "success",
                         title: "Enviado a Filemaker",

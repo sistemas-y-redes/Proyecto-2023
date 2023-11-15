@@ -269,7 +269,7 @@
           </div>
         </div>
       </div>
-      <!-- Botón de añadir en Visita -->
+      <!-- Botón de  en Visita -->
       <div v-if="pestañaActiva === 'Visita' && this.loading === false" class="añadir">
         <b-icon @click="crearVisita()" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>

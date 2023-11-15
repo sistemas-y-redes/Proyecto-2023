@@ -423,7 +423,7 @@ visitasModel.updateVisita = async (id,body) => {
   }
 
   const update = await axios.patch(
-    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/VisitasServiciosAPI/records/${id}`,
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SeguimientoVisitasAPI/records/${id}`,
     data,
     {
       httpsAgent: httpsAgent,
@@ -466,6 +466,41 @@ visitasModel.updateVisita = async (id,body) => {
   }
 
   return update ? true : false;
+};
+visitasModel.updatevisitas = async (id, req) => {
+
+  
+
+  const data = {
+      fieldData: {
+        DescripciónArt: req.DescripciónArt,
+        TrabajoRealizado: req.DescripciónArt,
+        HoraFinReal: req.HoraFinReal,
+        HoraInicioReal: req.HoraInicioReal,
+      }
+  };
+  console.log(data);
+  try {
+    
+      let respuesta = await axios.patch(
+          `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SeguimientoVisitasAPI/records/${id}`,
+          data,
+          {
+              httpsAgent: httpsAgent,
+              headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${visitasModel.fmtoken}`,
+              },
+          }
+      );
+      console.log(respuesta);
+
+      return respuesta.data.response.modId;
+  } catch (err) {
+      console.log(err);
+      return false;
+  }
+
 };
 
 module.exports = visitasModel;

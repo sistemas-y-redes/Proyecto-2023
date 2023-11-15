@@ -184,7 +184,6 @@ export default {
             Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
           },
         });
-        console.log(response)
         this.visitas = response;
 
       } catch (e) {
