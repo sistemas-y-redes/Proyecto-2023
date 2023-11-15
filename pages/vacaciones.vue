@@ -3,11 +3,12 @@
         <div class="boton-retorno mb-4">
             <NuxtLink to="/">&lt; <span>VOLVER</span></NuxtLink>
         </div>
-        <div class="vacationForm">
-            <h2>Seleccionar período de vacaciones</h2>
+        <div class="vacationForm vacation-section">
+            <label >Seleccionar período de vacaciones:</label>
             <div>
                 <label for="startDate">Fecha de inicio:</label>
-                <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates" input-class="form-input">
+                <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates"
+                    input-class="form-input ">
                 </datepicker>
             </div>
             <div>
@@ -15,22 +16,27 @@
                 <datepicker id="endDate" v-model="endDate" :format="customFormatter" :disabled-dates="disabledEndDates"
                     :disabled="!startDate" input-class="form-input"></datepicker>
             </div>
-            <h2>Seleccionar motivo de vacaciones</h2>
-            <select class="form-select" v-model="vacationReason">
-                <option disabled value="">Por favor seleccione uno</option>
-                <option>Vacaciones</option>
-                <option>Baja</option>
-                <option>Día libre</option>
-                <option>Ausencia injustificada</option>
-                <option>Formación</option>
-                <option>No trabajado</option>
-                <!-- Agrega más motivos aquí -->
-            </select>
+            <div class="form-group">
+                <label for="notas">Seleccionar motivo de vacaciones</label>
+                <select class="form-select" v-model="vacationReason">
+                    <option disabled value="">Por favor seleccione uno</option>
+                    <option>Vacaciones</option>
+                    <option>Baja</option>
+                    <option>Día libre</option>
+                    <option>Ausencia injustificada</option>
+                    <option>Formación</option>
+                    <option>No trabajado</option>
+                    <!-- Agrega más motivos aquí -->
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="notas">Notas:</label>
-                <textarea class="textarea form-control" type="text" id="notas" v-model="notas" placeholder="Escribe tus notas aquí"></textarea>
+                <textarea class="textarea form-control" type="text" id="notas" v-model="notas"
+                    placeholder="Escribe tus notas aquí"></textarea>
             </div>
-            <button class="text-white boton-carga text-center" @click="setVacaciones" :disabled="!startDate || !endDate || !vacationReason">
+            <button class="text-white boton-carga text-center" @click="setVacaciones"
+                :disabled="!startDate || !endDate || !vacationReason">
                 Solicitar
             </button>
         </div>
@@ -40,8 +46,9 @@
             <ul class="vacation-list">
                 <li v-for="(vacation, index) in vacations" :key="index" class="vacation-item">
 
-                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Desde:</strong> {{
-                        formatearFecha(vacation.fieldData.FechaDesde) }}
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Desde:</strong> <b-icon
+                            icon="calendar4"></b-icon> {{
+                                formatearFecha(vacation.fieldData.FechaDesde) }}
                     </div>
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Hasta:</strong> {{
                         formatearFecha(vacation.fieldData.FechaHasta) }}
@@ -57,8 +64,9 @@
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Notas:</strong> {{
                         vacation.fieldData.Notas }}
                     </div>
-                    <button class="text-white boton-carga text-center edit-button" v-if="!vacation.editing && vacation.fieldData.Estado === 'SOLICITADAS'"
-                        @click="editarVacacion(vacation)" >Editar</button>
+                    <button class="text-white boton-carga text-center edit-button"
+                        v-if="!vacation.editing && vacation.fieldData.Estado === 'SOLICITADAS'"
+                        @click="editarVacacion(vacation)">Editar</button>
                     <div v-if="vacation.editing" class="modal-edicion">
                         <div>
                             <label for="editStartDate">Fecha de inicio:</label>
@@ -68,7 +76,10 @@
                         </div>
                         <div>
                             <label for="editEndDate">Fecha de fin:</label>
-                            <datepicker id="editEndDate" v-model="vacation.fieldData.FechaHasta" :format="customFormatter" :disabled-dates="calculateDisabledEndDates(vacation.fieldData.FechaDesde)" :disabled="!vacation.fieldData.FechaDesde" input-class="form-input form-control"></datepicker>
+                            <datepicker id="editEndDate" v-model="vacation.fieldData.FechaHasta" :format="customFormatter"
+                                :disabled-dates="calculateDisabledEndDates(vacation.fieldData.FechaDesde)"
+                                :disabled="!vacation.fieldData.FechaDesde" input-class="form-input form-control">
+                            </datepicker>
                         </div>
                         <p>Seleccionar motivo de vacaciones</p>
                         <select class="form-select" v-model="vacation.fieldData.Motivo">
@@ -83,10 +94,13 @@
                         </select>
                         <div class="form-group">
                             <label for="notas">Notas:</label>
-                            <textarea class="textarea form-control " type="text" v-model="vacation.fieldData.Notas"></textarea>
+                            <textarea class="textarea form-control " type="text"
+                                v-model="vacation.fieldData.Notas"></textarea>
                         </div>
-                        <button class="text-white boton-carga text-center" @click="guardarCambios(vacation)">Guardar Cambios</button>
-                        <button class="text-white boton-carga text-center" @click="cancelarEdicion(vacation)">Cancelar</button>
+                        <button class="text-white boton-carga text-center" @click="guardarCambios(vacation)">Guardar
+                            Cambios</button>
+                        <button class="text-white boton-carga text-center"
+                            @click="cancelarEdicion(vacation)">Cancelar</button>
                     </div>
                 </li>
             </ul>
@@ -276,7 +290,7 @@ export default {
                         confirmButtonColor: "#000",
                         text: `Se ha enviado a Filemaker y será actualizado en breves`,
                     });
-                      window.location.href = window.location.href
+                    window.location.href = window.location.href
                 }
             } catch (e) {
                 Swal.fire({
@@ -436,7 +450,10 @@ h2 {
 .modal-edicion {
     padding: 0 0px;
 }
-.form-input{
-    background-color: white;
-}
-</style>
+
+.form-input-datepicker {
+    background-color: white !important;
+    border: 1px solid #ccc !important;
+    height: 50px;
+    width: -webkit-fill-available;
+}</style>

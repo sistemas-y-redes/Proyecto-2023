@@ -132,7 +132,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .login-text {
   margin-left: 12px;
   margin-right: 12px;
