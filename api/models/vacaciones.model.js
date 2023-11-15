@@ -111,7 +111,7 @@ vacacionesModel.newVacaciones = async (req) => {
             "FechaHasta": fechaFin,
             "Motivo": req.motivo,
             "Acceso": req.Tec,
-            "Notas": "",
+            "Notas": req.Notas._value,
             "Estado": "SOLICITADAS"
         }
     };
@@ -121,7 +121,7 @@ vacacionesModel.newVacaciones = async (req) => {
         if (vacacionesExistentes.length > 0) {
             for (let vacacion of vacacionesExistentes) {
                 if (seSolapan(fechaDesde, fechaFin, vacacion.fieldData.FechaDesde, vacacion.fieldData.FechaHasta)) {
-                    throw new Error("Las fechas de las vacaciones se solapan con una solicitud existente.");
+                    return false;
                 }
             }
         }
@@ -186,25 +186,52 @@ vacacionesModel.getvacacionesByCuentaFM = async (id) => {
 
 
 vacacionesModel.updatevacaciones = async (id, req) => {
+
+    req.FechaIni = extraerFecha(req.FechaIni);
+    req.FechaFin = extraerFecha(req.FechaFin);
+
+    fechaDesde = req.FechaIni.mes + "/" + req.FechaIni.dia + "/" + req.FechaIni.ano;
+    fechaFin = req.FechaFin.mes + "/" + req.FechaFin.dia + "/" + req.FechaFin.ano;
+
     const data = {
-        fieldData: {
-            STaller: req.horaSalida
+        "fieldData": {
+            "FechaDesde": fechaDesde,
+            "FechaHasta": fechaFin,
+            "Motivo": req.motivo,
+            "Notas": req.Notas,
         }
+    };
+    try {
+        const vacacionesExistentes = await consultaVacacionesExistentes(req.Tec);
+        if (vacacionesExistentes.length > 0) {
+            for (let vacacion of vacacionesExistentes) {
+                if (vacacion.recordId === id) {
+                    continue;
+                }
+                if (seSolapan(fechaDesde, fechaFin, vacacion.fieldData.FechaDesde, vacacion.fieldData.FechaHasta)) {
+                    console.log("se solapan las fechas");
+                    return false;
+                }
+            }
+        }
+
+        let respuesta = await axios.patch(
+            `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SolicitudVacacionesApi/records/${id}`,
+            data,
+            {
+                httpsAgent: httpsAgent,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${vacacionesModel.fmtoken}`,
+                },
+            }
+        );
+
+        return respuesta.data.response.modId;
+    } catch (err) {
+        console.log(err);
+        return false;
     }
-
-    const update = await axios.patch(
-        `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SolicitudVacacionesApi/records/${id}`,
-        data,
-        {
-            httpsAgent: httpsAgent,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${vacacionesModel.fmtoken}`,
-            },
-        }
-    );
-
-    return update ? true : false;
 
 };
 

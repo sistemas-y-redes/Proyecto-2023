@@ -87,7 +87,7 @@ router.get('/:id', [auth.validateAccess], async (req, res) => {
  * @return {JSON}
  */
 router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
-    const update = vacacionesModel.updatevacaciones(req.params.id, req.body);
+    const update =  await vacacionesModel.updatevacaciones(req.params.id, req.body);
 
     if (!update) {
         res.writeHead(500)

@@ -3,43 +3,90 @@
         <div class="boton-retorno mb-4">
             <NuxtLink to="/">&lt; <span>VOLVER</span></NuxtLink>
         </div>
-        <h1>Seleccionar período de vacaciones</h1>
-        <div>
-            <label for="startDate">Fecha de inicio:</label>
-            <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates">
-            </datepicker>
+        <div class="vacationForm">
+            <h2>Seleccionar período de vacaciones</h2>
+            <div>
+                <label for="startDate">Fecha de inicio:</label>
+                <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates">
+                </datepicker>
+            </div>
+            <div>
+                <label for="endDate">Fecha de fin:</label>
+                <datepicker id="endDate" v-model="endDate" :format="customFormatter" :disabled-dates="disabledEndDates"
+                    :disabled="!startDate"></datepicker>
+            </div>
+            <h2>Seleccionar motivo de vacaciones</h2>
+            <select v-model="vacationReason">
+                <option disabled value="">Por favor seleccione uno</option>
+                <option>Vacaciones</option>
+                <option>Baja</option>
+                <option>Día libre</option>
+                <option>Ausencia injustificada</option>
+                <option>Formación</option>
+                <option>No trabajado</option>
+                <!-- Agrega más motivos aquí -->
+            </select>
+            <div class="form-group">
+                <label for="notas">Notas:</label>
+                <textarea type="text" id="notas" v-model="notas" placeholder="Escribe tus notas aquí"></textarea>
+            </div>
+            <button class="text-white boton-carga text-center" @click="setVacaciones" :disabled="!startDate || !endDate || !vacationReason">
+                Solicitar
+            </button>
         </div>
-        <div>
-            <label for="endDate">Fecha de fin:</label>
-            <datepicker id="endDate" v-model="endDate" :format="customFormatter" :disabled-dates="disabledEndDates"
-                :disabled="!startDate"></datepicker>
-        </div>
-        <h1>Seleccionar motivo de vacaciones</h1>
-        <select v-model="vacationReason">
-            <option disabled value="">Por favor seleccione uno</option>
-            <option>Vacaciones</option>
-            <option>Baja</option>
-            <option>Día libre</option>
-            <option>Ausencia injustificada</option>
-            <option>Formación</option>
-            <option>No trabajado</option>
-            <!-- Agrega más motivos aquí -->
-        </select>
-        <button @click="setVacaciones" :disabled="!startDate || !endDate || !vacationReason">
-            Solicitar
-        </button>
         <!-- El resto de tu contenido existente -->
         <div v-if="vacations && vacations.length > 0" class="vacation-section">
             <h2>Vacaciones Solicitadas</h2>
             <ul class="vacation-list">
                 <li v-for="(vacation, index) in vacations" :key="index" class="vacation-item">
-                    <div class="vacation-detail"><strong>Desde:</strong> {{ formatearFecha(vacation.fieldData.FechaDesde) }}</div>
-                    <div class="vacation-detail"><strong>Hasta:</strong> {{ formatearFecha(vacation.fieldData.FechaHasta) }}</div>
-                    <div class="vacation-detail"><strong>Motivo:</strong> {{ vacation.fieldData.Motivo }}</div>
-                    <div class="vacation-detail"><strong>Estado:</strong> {{ vacation.fieldData.Estado }} <span
-                            v-if="vacation.fieldData.Estado === 'SOLICITADAS'" class="status-icon orange"></span>
+
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Desde:</strong> {{
+                        formatearFecha(vacation.fieldData.FechaDesde) }}
+                    </div>
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Hasta:</strong> {{
+                        formatearFecha(vacation.fieldData.FechaHasta) }}
+                    </div>
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Motivo:</strong> {{
+                        vacation.fieldData.Motivo }}</div>
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Estado:</strong> {{
+                        vacation.fieldData.Estado }} <span v-if="vacation.fieldData.Estado === 'SOLICITADAS'"
+                            class="status-icon orange"></span>
                         <span v-else-if="vacation.fieldData.Estado === 'ACEPTADAS'" class="status-icon green"></span>
                         <span v-else-if="vacation.fieldData.Estado === 'RECHAZADAS'" class="status-icon red"></span>
+                    </div>
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Notas:</strong> {{
+                        vacation.fieldData.Notas }}
+                    </div>
+                    <button class="text-white boton-carga text-center edit-button" v-if="!vacation.editing && vacation.fieldData.Estado === 'SOLICITADAS'"
+                        @click="editarVacacion(vacation)" >Editar</button>
+                    <div v-if="vacation.editing" class="modal-edicion">
+                        <div>
+                            <label for="editStartDate">Fecha de inicio:</label>
+                            <datepicker id="editStartDate" v-model="vacation.fieldData.FechaDesde" :format="customFormatter"
+                                :disabled-dates="disabledDates">
+                            </datepicker>
+                        </div>
+                        <div>
+                            <label for="editEndDate">Fecha de fin:</label>
+                            <datepicker id="editEndDate" v-model="vacation.fieldData.FechaHasta" :format="customFormatter" :disabled-dates="calculateDisabledEndDates(vacation.fieldData.FechaDesde)" :disabled="!vacation.fieldData.FechaDesde"></datepicker>
+                        </div>
+                        <p>Seleccionar motivo de vacaciones</p>
+                        <select v-model="vacation.fieldData.Motivo">
+                            <option disabled value="">Por favor seleccione uno</option>
+                            <option>Vacaciones</option>
+                            <option>Baja</option>
+                            <option>Día libre</option>
+                            <option>Ausencia injustificada</option>
+                            <option>Formación</option>
+                            <option>No trabajado</option>
+                            <!-- Agrega más motivos aquí -->
+                        </select>
+                        <div class="form-group">
+                            <label for="notas">Notas:</label>
+                            <textarea type="text" v-model="vacation.fieldData.Notas"></textarea>
+                        </div>
+                        <button class="text-white boton-carga text-center" @click="guardarCambios(vacation)">Guardar Cambios</button>
+                        <button class="text-white boton-carga text-center" @click="cancelarEdicion(vacation)">Cancelar</button>
                     </div>
                 </li>
             </ul>
@@ -65,6 +112,9 @@ export default {
                 to: new Date(new Date().setDate(new Date().getDate() - 1)), // Deshabilita fechas pasadas
             },
             vacations: [],
+            vacacionActual: null,
+            mostrarModalEdicion: false,
+            notas: '',
         };
     },
     computed: {
@@ -88,7 +138,21 @@ export default {
             const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
             return new Intl.DateTimeFormat('es-ES', options).format(new Date(date));
         },
+        calculateDisabledEndDates(startDate) {
+            if (!startDate) {
+                return { from: null, to: null };
+            }
+
+            const dayAfterStart = new Date(startDate);
+            dayAfterStart.setDate(dayAfterStart.getDate() + 1);
+            return {
+                to: new Date(dayAfterStart)
+            };
+        },
         formatearFecha(fecha) {
+            if (fecha instanceof Date) {
+                fecha = this.customFormatter(fecha);
+            }
             // Dividir la fecha en un array [MM, DD, YYYY]
             var partes = fecha.split('/');
 
@@ -110,14 +174,13 @@ export default {
                     confirmButtonColor: "#000",
                     text: `Por favor, completa todos los campos. `,
                 });
-                console.log("Por favor, completa todos los campos.");
                 return;
             }
             let tec = this.$store.state.User;
             try {
                 let response = await this.$axios.$post(
                     "/api/vacaciones/new",
-                    { Tec: tec, motivo: this.vacationReason, FechaIni: this.customFormatter(this.startDate), FechaFin: this.customFormatter(this.endDate) },
+                    { Tec: tec, motivo: this.vacationReason, FechaIni: this.customFormatter(this.startDate), FechaFin: this.customFormatter(this.endDate), Notas: notas },
                     {
                         headers: {
                             Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
@@ -166,6 +229,70 @@ export default {
                 console.log(e);
             }
             this.loading = false;
+        },
+        editarVacacion(vacation) {
+            this.vacations = this.vacations.map(v => {
+                if (v === vacation) {
+                    return { ...v, editing: true };
+                }
+                return { ...v, editing: false };
+            });
+        },
+        async guardarCambios(vacation) {
+            // Aquí deberías actualizar la lista de vacaciones y posiblemente enviar los cambios al servidor
+            if (!vacation) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    confirmButtonColor: "#000",
+                    text: `No se a podido actualizar la solicitud. `,
+                });
+            }
+
+            let tec = this.$store.state.User;
+            let data = {
+                Tec: tec,
+                motivo: vacation.fieldData.Motivo,
+                FechaIni: this.customFormatter(vacation.fieldData.FechaDesde),
+                FechaFin: this.customFormatter(vacation.fieldData.FechaHasta),
+                Notas: vacation.fieldData.Notas,
+
+            };
+            try {
+                let response = await this.$axios.$patch(
+                    `/api/vacaciones/edit/${vacation.recordId}`, data,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
+                        },
+                    }
+                );
+                console.log(response);
+                if (response) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Enviado a Filemaker",
+                        confirmButtonColor: "#000",
+                        text: `Se ha enviado a Filemaker y será actualizado en breves`,
+                    });
+                      window.location.href = window.location.href
+                }
+            } catch (e) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    confirmButtonColor: "#000",
+                    text: `No se ha podido actualizar la solicitud. `,
+                });
+                this.error = true;
+                console.log(e);
+            }
+            vacation.editing = false;
+
+        },
+        cancelarEdicion(vacation) {
+            vacation.editing = false;
         }
     },
     mounted() {
@@ -181,10 +308,11 @@ div {
     /* Añade padding a los lados para evitar que el contenido toque los bordes */
 }
 
-h1 {
-    font-size: 1.5em;
+h2 {
+    font-size: 1.2em;
     /* Aumenta el tamaño para una mejor visibilidad */
     margin-bottom: 0.5em;
+    margin-top: 0.5em;
     /* Añade un poco de margen debajo de los títulos */
 }
 
@@ -238,6 +366,11 @@ button {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.vacationForm {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
 .vacation-detail {
     margin-bottom: 10px;
 }
@@ -259,6 +392,11 @@ h2 {
     /* Sombra sutil */
 }
 
+.edit-button {
+    margin-right: 10px;
+    /* Otros estilos para el botón */
+}
+
 .status-icon {
     display: inline-block;
     width: 10px;
@@ -277,5 +415,25 @@ h2 {
 
 .red {
     background-color: red;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group textarea[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-edicion {
+    padding: 0 0px;
 }
 </style>
