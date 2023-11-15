@@ -7,16 +7,16 @@
             <h2>Seleccionar período de vacaciones</h2>
             <div>
                 <label for="startDate">Fecha de inicio:</label>
-                <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates">
+                <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates" input-class="form-input">
                 </datepicker>
             </div>
             <div>
                 <label for="endDate">Fecha de fin:</label>
                 <datepicker id="endDate" v-model="endDate" :format="customFormatter" :disabled-dates="disabledEndDates"
-                    :disabled="!startDate"></datepicker>
+                    :disabled="!startDate" input-class="form-input"></datepicker>
             </div>
             <h2>Seleccionar motivo de vacaciones</h2>
-            <select v-model="vacationReason">
+            <select class="form-select" v-model="vacationReason">
                 <option disabled value="">Por favor seleccione uno</option>
                 <option>Vacaciones</option>
                 <option>Baja</option>
@@ -28,7 +28,7 @@
             </select>
             <div class="form-group">
                 <label for="notas">Notas:</label>
-                <textarea type="text" id="notas" v-model="notas" placeholder="Escribe tus notas aquí"></textarea>
+                <textarea class="textarea form-control" type="text" id="notas" v-model="notas" placeholder="Escribe tus notas aquí"></textarea>
             </div>
             <button class="text-white boton-carga text-center" @click="setVacaciones" :disabled="!startDate || !endDate || !vacationReason">
                 Solicitar
@@ -63,15 +63,15 @@
                         <div>
                             <label for="editStartDate">Fecha de inicio:</label>
                             <datepicker id="editStartDate" v-model="vacation.fieldData.FechaDesde" :format="customFormatter"
-                                :disabled-dates="disabledDates">
+                                :disabled-dates="disabledDates" input-class="form-input form-control">
                             </datepicker>
                         </div>
                         <div>
                             <label for="editEndDate">Fecha de fin:</label>
-                            <datepicker id="editEndDate" v-model="vacation.fieldData.FechaHasta" :format="customFormatter" :disabled-dates="calculateDisabledEndDates(vacation.fieldData.FechaDesde)" :disabled="!vacation.fieldData.FechaDesde"></datepicker>
+                            <datepicker id="editEndDate" v-model="vacation.fieldData.FechaHasta" :format="customFormatter" :disabled-dates="calculateDisabledEndDates(vacation.fieldData.FechaDesde)" :disabled="!vacation.fieldData.FechaDesde" input-class="form-input form-control"></datepicker>
                         </div>
                         <p>Seleccionar motivo de vacaciones</p>
-                        <select v-model="vacation.fieldData.Motivo">
+                        <select class="form-select" v-model="vacation.fieldData.Motivo">
                             <option disabled value="">Por favor seleccione uno</option>
                             <option>Vacaciones</option>
                             <option>Baja</option>
@@ -83,7 +83,7 @@
                         </select>
                         <div class="form-group">
                             <label for="notas">Notas:</label>
-                            <textarea type="text" v-model="vacation.fieldData.Notas"></textarea>
+                            <textarea class="textarea form-control " type="text" v-model="vacation.fieldData.Notas"></textarea>
                         </div>
                         <button class="text-white boton-carga text-center" @click="guardarCambios(vacation)">Guardar Cambios</button>
                         <button class="text-white boton-carga text-center" @click="cancelarEdicion(vacation)">Cancelar</button>
@@ -435,5 +435,8 @@ h2 {
 
 .modal-edicion {
     padding: 0 0px;
+}
+.form-input{
+    background-color: white;
 }
 </style>
