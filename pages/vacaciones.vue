@@ -46,8 +46,7 @@
             <ul class="vacation-list">
                 <li v-for="(vacation, index) in vacations" :key="index" class="vacation-item">
 
-                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Desde:</strong> <b-icon
-                            icon="calendar4"></b-icon> {{
+                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Desde:</strong> {{
                                 formatearFecha(vacation.fieldData.FechaDesde) }}
                     </div>
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Hasta:</strong> {{
