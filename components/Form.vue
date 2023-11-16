@@ -49,7 +49,6 @@
           type="time"
           name="hora-fin"
           placeholder=""
-          required
         />
       </b-row>
 
@@ -138,10 +137,10 @@ export default {
         throw errorMostrar;
       }
 
-      if (this.form.HoraFin.length === 0) {
-        errorMostrar = "comprueba la hora de fin";
-        throw errorMostrar;
-      }
+      // if (this.form.HoraFin.length === 0) {
+      //   errorMostrar = "comprueba la hora de fin";
+      //   throw errorMostrar;
+      // }
 
       if (this.form.Descripcion.length === 0) {
         errorMostrar = "comprueba la descripción";
@@ -185,7 +184,7 @@ export default {
         confirmButtonColor: "#000",
         text: `Se ha enviado a Filemaker y será insertado en breves`,
       }).then(() => {
-        this.$router.replace("/");
+        window.location.href = window.location.href
       });
 
       this.form.Fecha = "";

@@ -319,7 +319,7 @@ visitasModel.borrarDocumento = async (idVisita, id) => {
 visitasModel.insertarSeguimiento = async (formulario) => {
   if (formulario.Fecha.length === 0) return false;
   if (formulario.HoraInicio.length === 0) return false;
-  if (formulario.HoraFin.length === 0) return false;
+  // if (formulario.HoraFin.length === 0) return false;
   if (formulario.Descripcion.length === 0) return false;
 
   const horaInicial = formulario.HoraInicio.split(":");
@@ -351,6 +351,7 @@ visitasModel.insertarSeguimiento = async (formulario) => {
       Tipo: formulario.Tipo,
       Referencia: formulario.referencia,
       "VisitasServicios::TrabajoRealizado": formulario.Descripcion,
+      'DescripciónArt' : formulario.Descripcion,
     },
   };
 
@@ -473,10 +474,9 @@ visitasModel.updatevisitas = async (id, req) => {
 
   const data = {
       fieldData: {
-        DescripciónArt: req.DescripciónArt,
-        TrabajoRealizado: req.DescripciónArt,
-        HoraFinReal: req.HoraFinReal,
-        HoraInicioReal: req.HoraInicioReal,
+        "DescripciónArt": req.DescripciónArt,
+        "HoraFinReal": req.HoraFinReal,
+        "HoraInicioReal": req.HoraInicioReal,
       }
   };
   console.log(data);
