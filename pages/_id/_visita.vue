@@ -237,9 +237,9 @@
 
                     <!-- Botón para guardar cambios -->
                     <b-row class="form-option my-4">
-                      <button class="mb-4" type="submit" id="submit">
-                        <b>Guardar Cambios</b>
-                      </button>
+                      <b-button variant="outline-primary" type="submit" >
+                        Guardar Cambios
+                      </b-button>
                     </b-row>
                   </form>
                 </b-modal>
@@ -665,7 +665,16 @@ export default {
     },
     resetModal() {
       // Restablece la línea editable cuando el modal se cierra
-      this.historialAEditar = null;
+      this.historialAEditar = {
+        'VisitasLineas::Fecha': '',
+        'VisitasLineas::Tec': '',
+        'VisitasLineas::TecNom': '',
+        'VisitasLineas::HoraInicioReal': '',
+        'VisitasLineas::HoraFinReal': '',
+        'VisitasLineas::DescripciónArt': '',
+        'recordId': ''
+        // Asegúrate de incluir todas las propiedades que necesites
+      };
     },
     handleEdit() {
 
