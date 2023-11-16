@@ -658,6 +658,7 @@ export default {
       console.log(historial);
       if (historial) {
         this.historialAEditar = historial;
+        this.historialAEditar.recordId = historial.recordId;
         this.tecnicos = [{ value: this.historialAEditar['VisitasLineas::Tec'], text: this.historialAEditar['VisitasLineas::TecNom'] }];
         this.$bvModal.show('modal-editar-historico'); // Abre el modal
       }
