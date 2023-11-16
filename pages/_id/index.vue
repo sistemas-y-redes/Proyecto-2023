@@ -318,22 +318,34 @@ export default {
       return (numero < 10 ? '0' : '') + numero;
     },
     getUserLocation() {
-      if ("geolocation" in navigator) {
-        // La geolocalización está disponible
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position.coords.latitude, position.coords.longitude);
-            // Aquí podrías enviar las coordenadas al backend si es necesario
-          },
-          (error) => {
-            console.error(error);
-            // Manejar errores, por ejemplo, si el usuario no da permiso
-          }
-        );
-      } else {
-        // La geolocalización no está disponible
-        alert('La geolocalización no está disponible en tu navegador.');
-      }
+      return new Promise((resolve, reject) => {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              console.log(position.coords.latitude, position.coords.longitude);
+              resolve(position.coords);
+            },
+            (error) => {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                confirmButtonColor: "#000",
+                text: `La geolocalización no está disponible o el usuario no dio permiso. `,
+              });
+              console.error(error);
+              reject('La geolocalización no está disponible o el usuario no dio permiso.');
+            }
+          );
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            confirmButtonColor: "#000",
+            text: `La geolocalización no está disponible en tu navegador. `,
+          });
+          reject('La geolocalización no está disponible en tu navegador.');
+        }
+      });
     },
     obtenerHoraActual() {
       var ahora = new Date();
@@ -363,32 +375,45 @@ export default {
     },
 
     async crearVisita() {
-      let data = {
-        tec: this.$store.state.User,
-        numeroServicio: this.visita[0].fieldData.NumeroServicio,
-        horaActual: this.obtenerHoraActual(),
-        userLocation: this.getUserLocation(),
-        fecha: this.getTodayDate(),
-      };
-      this.loading = true;
-      this.$axios
-        .post(`/api/visitas/new`, {
-          data,
-          headers: {
-            Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.$router.push(
-            `${this.$route.path}/${response.data.replace("/", "")}`
-          );
-          this.loading = false;
-          this.getVisita();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let userLocation = "";
+      try {
+        let userLocation = await this.getUserLocation();
+        console.log('ubicacion actual: ', userLocation);
+        // Resto del código ...
+      } catch (e) {
+        this.error = true;
+        console.log(e);
+        window.location.href = window.location.href
+      }
+      if (userLocation) {
+        let data = {
+          tec: this.$store.state.User,
+          numeroServicio: this.visita[0].fieldData.NumeroServicio,
+          horaActual: this.obtenerHoraActual(),
+          userLocation: userLocation,
+          fecha: this.getTodayDate(),
+        };
+        this.loading = true;
+        this.$axios
+          .post(`/api/visitas/new`, {
+            data,
+            headers: {
+              Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
+            },
+          })
+          .then((response) => {
+            console.log(response.data);
+            this.$router.push(
+              `${this.$route.path}/${response.data.replace("/", "")}`
+            );
+            this.loading = false;
+            this.getVisita();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
     },
 
     async getVisita() {
@@ -461,58 +486,69 @@ export default {
         return nombreFinal;
       }
     },
-    finishVisita(id) {
-      Swal.fire({
-        title: "Finalizar visita",
-        text: "¿Quieres finalizar esta visita?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Finalizar",
-      }).then((result) => {
-        if (result.isConfirmed) {
+    async finishVisita(id) {
+      let userLocation = "";
+      try {
+        let userLocation = await this.getUserLocation();
+        console.log('ubicacion actual: ', userLocation);
+        Swal.fire({
+          title: "Finalizar visita",
+          text: "¿Quieres finalizar esta visita?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Finalizar",
+        }).then((result) => {
+          if (result.isConfirmed) {
 
-          let data = {
-            tec: this.$store.state.User,
-            horaActual: this.obtenerHoraActual(),
-            userLocation: this.getUserLocation(),
-            fecha: this.getTodayDate(),
-          }
+            let data = {
+              tec: this.$store.state.User,
+              horaActual: this.obtenerHoraActual(),
+              userLocation: userLocation,
+              fecha: this.getTodayDate(),
+            }
 
-          // Enviamos al fm
-          this.$axios
-            .$patch(
-              "/api/visitas/edit/" + id,
-              {
-                data,
-                headers: {
-                  Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
-                },
-              }
-            )
-            .then((response) => {
-              Swal.fire({
-                icon: "success",
-                title: "Enviado a Filemaker",
-                confirmButtonColor: "#000",
-                text: `Tarea finalizada`,
-              }).then((response) => {
-                this.$router.go(this.$router.currentRoute)
+            // Enviamos al fm
+            this.$axios
+              .$patch(
+                "/api/visitas/edit/" + id,
+                {
+                  data,
+                  headers: {
+                    Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
+                  },
+                }
+              )
+              .then((response) => {
+                Swal.fire({
+                  icon: "success",
+                  title: "Enviado a Filemaker",
+                  confirmButtonColor: "#000",
+                  text: `Tarea finalizada`,
+                }).then((response) => {
+                  this.$router.go(this.$router.currentRoute)
+                })
+
               })
-
-            })
-            .catch((error) => {
-              Swal.fire({
-                icon: "error",
-                title: "Se ha producido un error",
-                text: "Por favor, intentelo de nuevo",
-                confirmButtonText: "Entendido",
-                confirmButtonColor: "#cf112b",
+              .catch((error) => {
+                Swal.fire({
+                  icon: "error",
+                  title: "Se ha producido un error",
+                  text: "Por favor, intentelo de nuevo",
+                  confirmButtonText: "Entendido",
+                  confirmButtonColor: "#cf112b",
+                });
               });
-            });
-        }
-      });
+          }
+        });
+        // Resto del código ...
+      } catch (e) {
+        this.error = true;
+        console.log(e);
+        window.location.href = window.location.href
+      }
+
     }
   },
 

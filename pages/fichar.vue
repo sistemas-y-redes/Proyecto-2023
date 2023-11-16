@@ -36,6 +36,7 @@
   </div>
 </template>
 <script>
+import Swal from "sweetalert2";
 export default {
   middleware: "authentication",
   data() {
@@ -95,22 +96,34 @@ export default {
       return horaFormateada;
     },
     getUserLocation() {
-      if ("geolocation" in navigator) {
-        // La geolocalización está disponible
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position.coords.latitude, position.coords.longitude);
-            // Aquí podrías enviar las coordenadas al backend si es necesario
-          },
-          (error) => {
-            console.error(error);
-            // Manejar errores, por ejemplo, si el usuario no da permiso
-          }
-        );
-      } else {
-        // La geolocalización no está disponible
-        alert('La geolocalización no está disponible en tu navegador.');
-      }
+      return new Promise((resolve, reject) => {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              console.log(position.coords.latitude, position.coords.longitude);
+              resolve(position.coords);
+            },
+            (error) => {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                confirmButtonColor: "#000",
+                text: `La geolocalización no está disponible o el usuario no dio permiso. `,
+              });
+              console.error(error);
+              reject('La geolocalización no está disponible o el usuario no dio permiso.');
+            }
+          );
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            confirmButtonColor: "#000",
+            text: `La geolocalización no está disponible en tu navegador. `,
+          });
+          reject('La geolocalización no está disponible en tu navegador.');
+        }
+      });
     },
     async getFichaje() {
       let tec = this.$store.state.User;
@@ -143,9 +156,14 @@ export default {
     async setFichaje() {
       let tec = this.$store.state.User;
       let horaActual = this.obtenerHoraActual();
-      let userLocation = this.getUserLocation();
-      console.log('hora actual: ' + horaActual);
-      console.log('ubicacion actual: ' + userLocation);
+      try {
+        let userLocation = await this.getUserLocation();
+        console.log('ubicacion actual: ', userLocation);
+        // Resto del código ...
+      } catch (e) {
+        this.error = true;
+        console.log(e);
+      }
       try {
         let response = await this.$axios.$post(
           "/api/fichaje/new",
@@ -168,8 +186,14 @@ export default {
     async endFichaje(id) {
       let tec = this.$store.state.User;
       let horaActual = this.obtenerHoraActual();
-      let userLocation = this.getUserLocation();
-      console.log(horaActual)
+      try {
+        let userLocation = await this.getUserLocation();
+        console.log(userLocation);
+        // Resto del código ...
+      } catch (e) {
+        this.error = true;
+        console.log(e);
+      }
       try {
         let response = await this.$axios.$patch(
           `/api/fichaje/edit/${this.fichaId}`,
