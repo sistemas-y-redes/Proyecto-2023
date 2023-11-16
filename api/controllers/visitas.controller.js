@@ -107,6 +107,18 @@ router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
     res.end("visitas: " + req.params.id + " cambiado")
 })
 
+router.patch("/close/:id", [auth.validateAccess], async (req, res) => {
+    const update =  await visitasModel.updateVisita(req.params.id, req.body);
+
+    if (!update) {
+        res.writeHead(500)
+        res.end()
+        return;
+    }
+
+    res.end("visitas: " + req.params.id + " cambiado")
+})
+
 /**
  * @url /documento/new
  * @method  POST

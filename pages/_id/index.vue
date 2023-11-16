@@ -215,11 +215,11 @@
                       {{ Linea["VisitasServicios::TrabajoRealizado"] }}
                     </NuxtLink>
                   </div>
-                  <div v-if="Linea['VisitasServicios::EstadoServicio'] == 'PENDIENTE'
+                  <!-- <div v-if="Linea['VisitasServicios::EstadoServicio'] == 'PENDIENTE'
                     " class="historicoBoton col">
                     <b-button variant="success" @click="finishVisita(Linea.recordId)"><b-icon
                         icon="check-lg"></b-icon></b-button>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="boton-carga-parent">
                   <button v-if="limite < visita.VisitasServicios.length" style="z-index: 9" class="boton-carga"
@@ -322,8 +322,12 @@ export default {
         if ("geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition(
             (position) => {
-              console.log(position.coords.latitude, position.coords.longitude);
-              resolve(position.coords);
+              let lat = position.coords.latitude.toString();
+              let lon = position.coords.longitude.toString();
+              lat = lat.replace(',', '.');
+              lon = lon.replace(',', '.');
+              let ubi = lat + ", " + lon;
+              resolve(ubi);
             },
             (error) => {
               Swal.fire({
@@ -377,7 +381,7 @@ export default {
     async crearVisita() {
       let userLocation = "";
       try {
-        let userLocation = await this.getUserLocation();
+        userLocation = await this.getUserLocation();
         console.log('ubicacion actual: ', userLocation);
         // Resto del código ...
       } catch (e) {
@@ -390,7 +394,7 @@ export default {
           tec: this.$store.state.User,
           numeroServicio: this.visita[0].fieldData.NumeroServicio,
           horaActual: this.obtenerHoraActual(),
-          userLocation: userLocation,
+          UserLocation: userLocation,
           fecha: this.getTodayDate(),
         };
         this.loading = true;
@@ -425,13 +429,13 @@ export default {
             Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
           },
         });
+        console.log(this.visita);
         this.visita.visitaFieldata = this.visita[0].fieldData;
         this.visita.VisitasServicios =
           this.visita[0].portalData.VisitasServicios;
 
         this.visita.VisitasServicios.sort((a, b) => b.recordId - a.recordId);
         this.visita.VisitasFotos = this.visita[0].portalData.VisitasFotos;
-        console.log(this.visita);
 
         if (this.loading) {
           this.loading = false;
@@ -487,9 +491,10 @@ export default {
       }
     },
     async finishVisita(id) {
+      console.log(id);
       let userLocation = "";
       try {
-        let userLocation = await this.getUserLocation();
+        userLocation = await this.getUserLocation();
         console.log('ubicacion actual: ', userLocation);
         Swal.fire({
           title: "Finalizar visita",
@@ -505,14 +510,14 @@ export default {
             let data = {
               tec: this.$store.state.User,
               horaActual: this.obtenerHoraActual(),
-              userLocation: userLocation,
+              UserLocation: userLocation,
               fecha: this.getTodayDate(),
             }
 
             // Enviamos al fm
             this.$axios
               .$patch(
-                "/api/visitas/edit/" + id,
+                "/api/visitas/close/" + id,
                 {
                   data,
                   headers: {
@@ -553,8 +558,6 @@ export default {
   },
 
   async mounted() {
-    if (this.$cookies.get("TOKEN") === "") this.$router.push("/login");
-    if (!this.$cookies.get("TOKEN")) this.$router.push("/login");
 
     await this.getVisita();
     this.loading = false;
