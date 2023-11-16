@@ -137,6 +137,37 @@ visitasModel.newVisita = async (sat) => {
     return false;
   }
 
+  const dataUbicacion = {
+    fieldData: {
+      ClienteAccion: "INICIO VISITA",
+      Direccion: "",
+      fecha: sat.fecha,
+      FechaHora: sat.fecha + " " + sat.horaActual,
+      IdLineaVisita: "",
+      idSat: "",
+      Notas: "",
+      Tecnico: sat.tec,
+      Ubicacion: sat.UserLocation
+    },
+  };
+
+  let respuestaUbi = await axios.post(
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/UbicaciónApi/records`,
+    dataUbicacion,
+    {
+      httpsAgent: httpsAgent,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${visitasModel.fmtoken}`,
+      },
+    }
+  );
+
+  if (!respuestaUbi) {
+    console.log("Error al guardar la ubicación");
+    return false;
+  }
+
   return respuesta.data.response.recordId;
 };
 
@@ -188,7 +219,7 @@ visitasModel.getVisitaServicioByRecordId = async (id) => {
     );
 
     const properList = list.data.response.data;
-    
+
     return properList;
   } catch (err) {
     console.log(err);
@@ -317,6 +348,7 @@ visitasModel.insertarSeguimiento = async (formulario) => {
       NumeroServicioVisita: formulario.NumeroServicio,
       NumeroServicio: formulario.NumeroServicioVisita,
       Tec: formulario.Tec,
+      Tipo: formulario.Tipo,
       Referencia: formulario.referencia,
       "VisitasServicios::TrabajoRealizado": formulario.Descripcion,
     },
@@ -383,7 +415,7 @@ visitasModel.insertarMaterial = async (formulario) => {
  * @param       {object} data       Los datos a modificar
  * @returns     {bool}
  */
-visitasModel.updateVisita = async (id) => {
+visitasModel.updateVisita = async (id,body) => {
   const data = {
     fieldData: {
       EstadoServicio: "TERMINADO"
@@ -391,18 +423,84 @@ visitasModel.updateVisita = async (id) => {
   }
 
   const update = await axios.patch(
-    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/VisitasServiciosAPI/records/${id}`,
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SeguimientoVisitasAPI/records/${id}`,
     data,
     {
       httpsAgent: httpsAgent,
       headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${visitasModel.fmtoken}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${visitasModel.fmtoken}`,
       },
     }
   );
 
+  const dataUbicacion = {
+    fieldData: {
+      ClienteAccion: "VISITA TERMINADA",
+      Direccion: "",
+      fecha: body.fecha,
+      FechaHora: body.fecha + " " + body.horaEntrada,
+      IdLineaVisita: "",
+      idSat: "",
+      Notas: "",
+      Tecnico: body.tec,
+      Ubicacion: body.UserLocation
+    },
+  };
+
+  let respuestaUbi = await axios.post(
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/UbicaciónApi/records`,
+    dataUbicacion,
+    {
+      httpsAgent: httpsAgent,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${visitasModel.fmtoken}`,
+      },
+    }
+  );
+
+  if (!respuestaUbi) {
+    console.log("Error al guardar la ubicación");
+    return false;
+  }
+
   return update ? true : false;
+};
+visitasModel.updatevisitas = async (id, req) => {
+
+  
+
+  const data = {
+      fieldData: {
+        DescripciónArt: req.DescripciónArt,
+        TrabajoRealizado: req.DescripciónArt,
+        HoraFinReal: req.HoraFinReal,
+        HoraInicioReal: req.HoraInicioReal,
+      }
+  };
+  console.log(data);
+  try {
+    
+      let respuesta = await axios.patch(
+          `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SeguimientoVisitasAPI/records/${id}`,
+          data,
+          {
+              httpsAgent: httpsAgent,
+              headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${visitasModel.fmtoken}`,
+              },
+          }
+      );
+      console.log(respuesta);
+
+      return respuesta.data.response.modId;
+  } catch (err) {
+      console.log(err);
+      return false;
+  }
+
 };
 
 module.exports = visitasModel;

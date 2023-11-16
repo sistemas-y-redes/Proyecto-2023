@@ -63,7 +63,6 @@ export default {
         const response = await this.$axios.$post('/api/usuarios/login', credenciales)
         
         if (response) {
-          console.log(response)
           this.login = false;
           this.$cookies.set("TOKEN", response);
           this.$store.commit('saveUser', credenciales);

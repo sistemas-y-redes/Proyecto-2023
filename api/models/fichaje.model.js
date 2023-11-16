@@ -10,7 +10,7 @@ fichajeModel.fmtoken = "";
 fichajeModel.usuario = "";
 
 fichajeModel.findFichaje = async (req) => {
-  
+
   const query = {
     query: [
       {
@@ -21,7 +21,7 @@ fichajeModel.findFichaje = async (req) => {
   if (req.Fecha) {
     query.query[0].Fecha = req.Fecha;
   }
-  
+
   console.log(query)
   try {
     let respuesta = await axios.post(
@@ -79,6 +79,37 @@ fichajeModel.newFichaje = async (req) => {
     return false;
   }
 
+  const dataUbicacion = {
+    fieldData: {
+      ClienteAccion: "INICIO JORNADA",
+      Direccion: "",
+      fecha: req.fecha,
+      FechaHora: req.fecha + " " + req.horaEntrada,
+      IdLineaVisita: "",
+      idSat: "",
+      Notas: "",
+      Tecnico: req.Tec,
+      Ubicacion: req.UserLocation
+    },
+  };
+
+  let respuestaUbi = await axios.post(
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/UbicaciónApi/records`,
+    dataUbicacion,
+    {
+      httpsAgent: httpsAgent,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${fichajeModel.fmtoken}`,
+      },
+    }
+  );
+
+  if (!respuestaUbi) {
+    console.log("Error al guardar la ubicación");
+    return false;
+  }
+
   return respuesta.data.response.recordId;
 };
 
@@ -103,7 +134,7 @@ fichajeModel.getFichajeByRecordId = async (id) => {
     );
 
     const properList = fichaje.data.response.data;
-    
+
     return properList;
   } catch (err) {
     console.log(err);
@@ -112,13 +143,7 @@ fichajeModel.getFichajeByRecordId = async (id) => {
 };
 
 
-/**
- * @name        updateVisita
- * @description Actualiza una tarea en Filemaker
- * @param       {string} id         El RecordId de la tarea de FM a modificar
- * @param       {object} req       Los datos a modificar
- * @returns     {bool}
- */
+
 fichajeModel.updateFichaje = async (id, req) => {
   const data = {
     fieldData: {
@@ -132,13 +157,45 @@ fichajeModel.updateFichaje = async (id, req) => {
     {
       httpsAgent: httpsAgent,
       headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${fichajeModel.fmtoken}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${fichajeModel.fmtoken}`,
       },
     }
   );
 
+  const dataUbicacion = {
+    fieldData: {
+      ClienteAccion: "FIN JORNADA",
+      Direccion: "",
+      fecha: req.fecha,
+      FechaHora: req.fecha + " " + req.horaSalida,
+      IdLineaVisita: "",
+      idSat: "",
+      Notas: "",
+      Tecnico: req.Tec,
+      Ubicacion: req.UserLocation
+    },
+  };
+
+  let respuestaUbi = await axios.post(
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/UbicaciónApi/records`,
+    dataUbicacion,
+    {
+      httpsAgent: httpsAgent,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${fichajeModel.fmtoken}`,
+      },
+    }
+  );
+
+  if (!respuestaUbi) {
+    console.log("Error al guardar la ubicación");
+    return false;
+  }
+
   return update ? true : false;
+  
 };
 
 module.exports = fichajeModel;

@@ -130,22 +130,22 @@ export default {
 
       if (this.form.Fecha.length === 0) {
         errorMostrar = "comprueba la fecha";
-        throw error;
+        throw errorMostrar;
       }
 
       if (this.form.HoraInicio.length === 0) {
         errorMostrar = "comprueba la hora de inicio";
-        throw error;
+        throw errorMostrar;
       }
 
       if (this.form.HoraFin.length === 0) {
         errorMostrar = "comprueba la hora de fin";
-        throw error;
+        throw errorMostrar;
       }
 
       if (this.form.Descripcion.length === 0) {
         errorMostrar = "comprueba la descripción";
-        throw error;
+        throw errorMostrar;
       }
 
       const formulario = { ...this.form };
@@ -194,6 +194,12 @@ export default {
       this.form.Descripcion = "";
       this.loading = false;
     },
+    getCurrentTime() {
+      const now = new Date();
+      let hours = now.getHours().toString().padStart(2, '0');
+      let minutes = now.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    },
   },
   mounted() {
     this.tecnicos.push({value: this.numeroTecnico, text: this.nombreTecnico})
@@ -204,7 +210,11 @@ export default {
     if (this.visita.visitaFieldata["Visitas::Tec6"]) this.tecnicos.push({value: this.visita.visitaFieldata["Visitas::Tec6"], text: this.visita.visitaFieldata["Visitas::TecNom6"]})
     if (this.visita.visitaFieldata["Visitas::Tec7"]) this.tecnicos.push({value: this.visita.visitaFieldata["Visitas::Tec7"], text: this.visita.visitaFieldata["Visitas::TecNom7"]})
     if (this.visita.visitaFieldata["Visitas::Tec8"]) this.tecnicos.push({value: this.visita.visitaFieldata["Visitas::Tec8"], text: this.visita.visitaFieldata["Visitas::TecNom8"]})
-    
+
+    // Aqui se le asigna por defecto como tecnico el tecnico que se a logeado
+    this.tecnicoSeleccionado = this.$store.state.User;
+    this.form.HoraInicio = this.getCurrentTime();
+
     // Obtener técnicos
     /*this.$axios.$get("/api/usuarios/list", {
       headers: {
