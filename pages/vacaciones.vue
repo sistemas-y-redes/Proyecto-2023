@@ -4,7 +4,7 @@
             <NuxtLink to="/">&lt; <span>VOLVER</span></NuxtLink>
         </div>
         <div class="vacationForm vacation-section">
-            <label >Seleccionar período de vacaciones:</label>
+            <label>Seleccionar período de vacaciones:</label>
             <div>
                 <label for="startDate">Fecha de inicio:</label>
                 <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates"
@@ -35,10 +35,10 @@
                 <textarea class="textarea form-control" type="text" id="notas" v-model="notas"
                     placeholder="Escribe tus notas aquí"></textarea>
             </div>
-            <button class="text-white boton-carga text-center" @click="setVacaciones"
-                :disabled="!startDate || !endDate || !vacationReason">
+            <b-button variant="outline-primary" class="text-center" :disabled="!startDate || !endDate || !vacationReason"
+                @click="setVacaciones">
                 Solicitar
-            </button>
+            </b-button>
         </div>
         <!-- El resto de tu contenido existente -->
         <div v-if="vacations && vacations.length > 0" class="vacation-section">
@@ -47,7 +47,7 @@
                 <li v-for="(vacation, index) in vacations" :key="index" class="vacation-item">
 
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Desde:</strong> {{
-                                formatearFecha(vacation.fieldData.FechaDesde) }}
+                        formatearFecha(vacation.fieldData.FechaDesde) }}
                     </div>
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Hasta:</strong> {{
                         formatearFecha(vacation.fieldData.FechaHasta) }}
@@ -63,44 +63,53 @@
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Notas:</strong> {{
                         vacation.fieldData.Notas }}
                     </div>
-                    <button class="text-white boton-carga text-center edit-button"
+                    <b-button variant="outline-primary"
                         v-if="!vacation.editing && vacation.fieldData.Estado === 'SOLICITADAS'"
-                        @click="editarVacacion(vacation)">Editar</button>
-                    <div v-if="vacation.editing" class="modal-edicion">
-                        <div>
+                        @click="editarVacacion(vacation)">
+                        Editar
+                    </b-button>
+
+                    <b-modal id="modal-editar-historico" title="Editar vacaciones" @hide="cancelarEdicion">
+                        <b-row class="form-option my-3">
                             <label for="editStartDate">Fecha de inicio:</label>
-                            <datepicker id="editStartDate" v-model="vacation.fieldData.FechaDesde" :format="customFormatter"
-                                :disabled-dates="disabledDates" input-class="form-input form-control">
+                            <datepicker id="editStartDate" v-model="vacacionActual.FechaDesde"
+                                :format="customFormatter" :disabled-dates="disabledDates"
+                                input-class="form-input form-control">
                             </datepicker>
-                        </div>
-                        <div>
+                        </b-row>
+                        <b-row class="form-option my-3">
                             <label for="editEndDate">Fecha de fin:</label>
-                            <datepicker id="editEndDate" v-model="vacation.fieldData.FechaHasta" :format="customFormatter"
-                                :disabled-dates="calculateDisabledEndDates(vacation.fieldData.FechaDesde)"
-                                :disabled="!vacation.fieldData.FechaDesde" input-class="form-input form-control">
+                            <datepicker id="editEndDate" v-model="vacacionActual.FechaHasta"
+                                :format="customFormatter"
+                                :disabled-dates="calculateDisabledEndDates(vacacionActual.FechaDesde)"
+                                :disabled="!vacacionActual.FechaDesde" input-class="form-input form-control">
                             </datepicker>
-                        </div>
-                        <p>Seleccionar motivo de vacaciones</p>
-                        <select class="form-select" v-model="vacation.fieldData.Motivo">
-                            <option disabled value="">Por favor seleccione uno</option>
-                            <option>Vacaciones</option>
-                            <option>Baja</option>
-                            <option>Día libre</option>
-                            <option>Ausencia injustificada</option>
-                            <option>Formación</option>
-                            <option>No trabajado</option>
-                            <!-- Agrega más motivos aquí -->
-                        </select>
-                        <div class="form-group">
+                        </b-row>
+                        <b-row class="form-option my-3">
+                            <p>Seleccionar motivo de vacaciones</p>
+                            <select class="form-select" v-model="vacacionActual.Motivo">
+                                <option disabled value="">Por favor seleccione uno</option>
+                                <option>Vacaciones</option>
+                                <option>Baja</option>
+                                <option>Día libre</option>
+                                <option>Ausencia injustificada</option>
+                                <option>Formación</option>
+                                <option>No trabajado</option>
+                                <!-- Agrega más motivos aquí -->
+                            </select>
+                        </b-row>
+                        <b-row class="form-option my-3">
+
                             <label for="notas">Notas:</label>
                             <textarea class="textarea form-control " type="text"
-                                v-model="vacation.fieldData.Notas"></textarea>
-                        </div>
-                        <button class="text-white boton-carga text-center" @click="guardarCambios(vacation)">Guardar
-                            Cambios</button>
-                        <button class="text-white boton-carga text-center"
-                            @click="cancelarEdicion(vacation)">Cancelar</button>
-                    </div>
+                                v-model="vacacionActual.Notas"></textarea>
+                        </b-row>
+                        <b-button variant="outline-primary" @click="guardarCambios(vacacionActual)">
+                            Guardar
+                            Cambios
+                        </b-button>
+                    </b-modal>
+                   
                 </li>
             </ul>
         </div>
@@ -125,9 +134,17 @@ export default {
                 to: new Date(new Date().setDate(new Date().getDate() - 1)), // Deshabilita fechas pasadas
             },
             vacations: [],
-            vacacionActual: null,
+            vacacionActual: {
+                FechaDesde: '',
+                FechaHasta: '',
+                Motivo: '',
+                Notas: '',
+                recordId: '',
+
+            },
             mostrarModalEdicion: false,
             notas: '',
+
         };
     },
     computed: {
@@ -244,14 +261,13 @@ export default {
             this.loading = false;
         },
         editarVacacion(vacation) {
-            this.vacations = this.vacations.map(v => {
-                if (v === vacation) {
-                    return { ...v, editing: true };
-                }
-                return { ...v, editing: false };
-            });
+            console.log(vacation);
+            this.$bvModal.show('modal-editar-historico');
+            this.vacacionActual = vacation.fieldData;
+            this.vacacionActual.recordId = vacation.recordId;
         },
         async guardarCambios(vacation) {
+            console.log(vacation);
             // Aquí deberías actualizar la lista de vacaciones y posiblemente enviar los cambios al servidor
             if (!vacation) {
                 Swal.fire({
@@ -265,10 +281,10 @@ export default {
             let tec = this.$store.state.User;
             let data = {
                 Tec: tec,
-                motivo: vacation.fieldData.Motivo,
-                FechaIni: this.customFormatter(vacation.fieldData.FechaDesde),
-                FechaFin: this.customFormatter(vacation.fieldData.FechaHasta),
-                Notas: vacation.fieldData.Notas,
+                motivo: vacation.Motivo,
+                FechaIni: this.customFormatter(vacation.FechaDesde),
+                FechaFin: this.customFormatter(vacation.FechaHasta),
+                Notas: vacation.Notas,
 
             };
             try {
@@ -302,8 +318,9 @@ export default {
             vacation.editing = false;
 
         },
-        cancelarEdicion(vacation) {
-            vacation.editing = false;
+        cancelarEdicion() {
+            this.$bvModal.hide('modal-editar-historico');
+            this.vacacionActual = [];
         }
     },
     mounted() {
@@ -453,4 +470,5 @@ h2 {
     border: 1px solid #ccc !important;
     height: 50px;
     width: -webkit-fill-available;
-}</style>
+}
+</style>
