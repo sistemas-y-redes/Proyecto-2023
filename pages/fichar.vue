@@ -100,8 +100,12 @@ export default {
         if ("geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition(
             (position) => {
-              console.log(position.coords.latitude, position.coords.longitude);
-              resolve(position.coords);
+              let lat = position.coords.latitude.toString();
+              let lon = position.coords.longitude.toString();
+              lat = lat.replace(',', '.');
+              lon = lon.replace(',', '.');
+              let ubi = lat + ", " + lon;
+              resolve(ubi);
             },
             (error) => {
               Swal.fire({
@@ -156,38 +160,46 @@ export default {
     async setFichaje() {
       let tec = this.$store.state.User;
       let horaActual = this.obtenerHoraActual();
+      let userLocation = "";
       try {
-        let userLocation = await this.getUserLocation();
+        userLocation = await this.getUserLocation();
         console.log('ubicacion actual: ', userLocation);
         // Resto del código ...
       } catch (e) {
         this.error = true;
         console.log(e);
       }
-      try {
-        let response = await this.$axios.$post(
-          "/api/fichaje/new",
-          { Tec: tec, horaEntrada: horaActual, UserLocation: userLocation, fecha: this.fechaUbiFormat },
-          {
-            headers: {
-              Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
-            },
+      console.log('userLocation');
+      console.log(userLocation);
+      if (userLocation) {
+        console.log('prueba');
+        try {
+          let response = await this.$axios.$post(
+            "/api/fichaje/new",
+            { Tec: tec, horaEntrada: horaActual, UserLocation: userLocation, fecha: this.fechaUbiFormat },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
+              },
+            }
+          );
+          if (response) {
+            window.location.href = window.location.href
           }
-        );
-        if (response) {
-          window.location.href = window.location.href
+        } catch (e) {
+          this.error = true;
+          console.log(e);
         }
-      } catch (e) {
-        this.error = true;
-        console.log(e);
       }
+
       this.loading = false;
     },
     async endFichaje(id) {
       let tec = this.$store.state.User;
       let horaActual = this.obtenerHoraActual();
+      let userLocation = "";
       try {
-        let userLocation = await this.getUserLocation();
+        userLocation = await this.getUserLocation();
         console.log(userLocation);
         // Resto del código ...
       } catch (e) {
