@@ -98,6 +98,11 @@ export default {
     getUserLocation() {
       return new Promise((resolve, reject) => {
         if ("geolocation" in navigator) {
+          const options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          };
           navigator.geolocation.getCurrentPosition(
             (position) => {
               let lat = position.coords.latitude.toString();
@@ -116,7 +121,7 @@ export default {
               });
               console.error(error);
               reject('La geolocalización no está disponible o el usuario no dio permiso.');
-            }
+            }, options
           );
         } else {
           Swal.fire({
