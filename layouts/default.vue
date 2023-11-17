@@ -50,6 +50,7 @@ span {
   justify-items: center;
   align-items: stretch;
   justify-content: center;
+  max-width: 100%;
 }
 .lista-tareas {
   background-color: var(--color);

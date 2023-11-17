@@ -8,13 +8,13 @@
             <div>
                 <label for="startDate">Fecha de inicio:</label>
                 <datepicker id="startDate" v-model="startDate" :format="customFormatter" :disabled-dates="disabledDates"
-                    input-class="form-input ">
+                    input-class="form-input " :calendar-class="calendarCentered">
                 </datepicker>
             </div>
             <div>
                 <label for="endDate">Fecha de fin:</label>
                 <datepicker id="endDate" v-model="endDate" :format="customFormatter" :disabled-dates="disabledEndDates"
-                    :disabled="!startDate" input-class="form-input"></datepicker>
+                    :disabled="!startDate" input-class="form-input" :calendar-class="calendarCentered"></datepicker>
             </div>
             <div class="form-group">
                 <label for="notas">Seleccionar motivo de vacaciones</label>
@@ -35,7 +35,7 @@
                 <textarea class="textarea form-control" type="text" id="notas" v-model="notas"
                     placeholder="Escribe tus notas aquí"></textarea>
             </div>
-            <b-button variant="outline-primary" class="text-center" :disabled="!startDate || !endDate || !vacationReason"
+            <b-button variant="primary" class="text-center" :disabled="!startDate || !endDate || !vacationReason"
                 @click="setVacaciones">
                 Solicitar
             </b-button>
@@ -54,11 +54,16 @@
                     </div>
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Motivo:</strong> {{
                         vacation.fieldData.Motivo }}</div>
-                    <div v-if="!vacation.editing" class="vacation-detail"><strong>Estado:</strong> {{
-                        vacation.fieldData.Estado }} <span v-if="vacation.fieldData.Estado === 'SOLICITADAS'"
-                            class="status-icon orange"></span>
-                        <span v-else-if="vacation.fieldData.Estado === 'ACEPTADAS'" class="status-icon green"></span>
-                        <span v-else-if="vacation.fieldData.Estado === 'RECHAZADAS'" class="status-icon red"></span>
+                    <div v-if="!vacation.editing" class="vacation-detail">
+                        <span class="estado-container">
+                            <strong>Estado:</strong> {{
+                                vacation.fieldData.Estado }} <span v-if="vacation.fieldData.Estado === 'SOLICITADAS'"
+                                class="status-icon purple"></span>
+                            <span v-else-if="vacation.fieldData.Estado === 'EN PROCESO'" class="status-icon blue"></span>
+                            <span v-else-if="vacation.fieldData.Estado === 'RECHAZADAS'" class="status-icon red"></span>
+                            <span v-else-if="vacation.fieldData.Estado === 'PENDIENTES'" class="status-icon pink"></span>
+                            <span v-else-if="vacation.fieldData.Estado === 'FIRMADAS'" class="status-icon green"></span>
+                        </span>
                     </div>
                     <div v-if="!vacation.editing" class="vacation-detail"><strong>Notas:</strong> {{
                         vacation.fieldData.Notas }}
@@ -72,17 +77,15 @@
                     <b-modal id="modal-editar-historico" title="Editar vacaciones" @hide="cancelarEdicion">
                         <b-row class="form-option my-3">
                             <label for="editStartDate">Fecha de inicio:</label>
-                            <datepicker id="editStartDate" v-model="vacacionActual.FechaDesde"
-                                :format="customFormatter" :disabled-dates="disabledDates"
-                                input-class="form-input form-control">
+                            <datepicker id="editStartDate" v-model="vacacionActual.FechaDesde" :format="customFormatter"
+                                :disabled-dates="disabledDates" input-class="form-input form-control" :calendar-class="calendarCentered">
                             </datepicker>
                         </b-row>
                         <b-row class="form-option my-3">
                             <label for="editEndDate">Fecha de fin:</label>
-                            <datepicker id="editEndDate" v-model="vacacionActual.FechaHasta"
-                                :format="customFormatter"
+                            <datepicker id="editEndDate" v-model="vacacionActual.FechaHasta" :format="customFormatter"
                                 :disabled-dates="calculateDisabledEndDates(vacacionActual.FechaDesde)"
-                                :disabled="!vacacionActual.FechaDesde" input-class="form-input form-control">
+                                :disabled="!vacacionActual.FechaDesde" input-class="form-input form-control" :calendar-class="calendarCentered">
                             </datepicker>
                         </b-row>
                         <b-row class="form-option my-3">
@@ -101,15 +104,14 @@
                         <b-row class="form-option my-3">
 
                             <label for="notas">Notas:</label>
-                            <textarea class="textarea form-control " type="text"
-                                v-model="vacacionActual.Notas"></textarea>
+                            <textarea class="textarea form-control " type="text" v-model="vacacionActual.Notas"></textarea>
                         </b-row>
                         <b-button variant="outline-primary" @click="guardarCambios(vacacionActual)">
                             Guardar
                             Cambios
                         </b-button>
                     </b-modal>
-                   
+
                 </li>
             </ul>
         </div>
@@ -144,6 +146,7 @@ export default {
             },
             mostrarModalEdicion: false,
             notas: '',
+            calendarCentered: 'datepicker-popup',
 
         };
     },
@@ -330,6 +333,7 @@ export default {
 </script>
   
 <style scoped>
+
 /* Estilos generales para móviles */
 div {
     padding: 0 15px;
@@ -432,9 +436,24 @@ h2 {
     border-radius: 50%;
     margin-left: 5px;
 }
+.estado-container {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: black;
+}
 
-.orange {
-    background-color: orange;
+
+.purple {
+    background-color: #A072FD;
+}
+
+.pink {
+    background-color: #FFA49F;
+}
+
+.blue {
+    background-color: #97B6FC;
 }
 
 .green {
@@ -471,4 +490,20 @@ h2 {
     height: 50px;
     width: -webkit-fill-available;
 }
+::v-deep .form-input {
+  width: 100%; /* Make the input take the full width of its parent */
+  box-sizing: border-box;
+  border: 0.5px solid #CCCCCC;
+  background-color: white !important; /* Include padding and border in the element's total width and height */
+  /* Add any additional styling you need here */
+
+}
+
+::v-deep .datepicker-popup {
+    position: fixed; /* or absolute, depending on how your datepicker positions the popup */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 </style>
