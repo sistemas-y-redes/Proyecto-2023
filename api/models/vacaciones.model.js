@@ -103,6 +103,13 @@ vacacionesModel.newVacaciones = async (req) => {
     fechaDesde = req.FechaIni.mes + "/" + req.FechaIni.dia + "/" + req.FechaIni.ano;
     fechaFin = req.FechaFin.mes + "/" + req.FechaFin.dia + "/" + req.FechaFin.ano;
 
+    let tipo = "";
+    if (req.motivo && req.motivo == "Vacaciones") {
+        tipo = "VACACIONES";
+    } else if (req.motivo && req.motivo != "Vacaciones") {
+        tipo = "AUSENCIAS";
+    }
+
 
     const data = {
         "fieldData": {
@@ -112,7 +119,8 @@ vacacionesModel.newVacaciones = async (req) => {
             "Motivo": req.motivo,
             "Acceso": req.Tec,
             "Notas": req.Notas._value,
-            "Estado": "SOLICITADAS"
+            "Estado": "SOLICITADAS",
+            "Tipo": tipo
         }
     };
 
@@ -193,12 +201,20 @@ vacacionesModel.updatevacaciones = async (id, req) => {
     fechaDesde = req.FechaIni.mes + "/" + req.FechaIni.dia + "/" + req.FechaIni.ano;
     fechaFin = req.FechaFin.mes + "/" + req.FechaFin.dia + "/" + req.FechaFin.ano;
 
+    let tipo = "";
+    if (req.motivo && req.motivo == "Vacaciones") {
+        tipo = "VACACIONES";
+    } else if (req.motivo && req.motivo != "Vacaciones") {
+        tipo = "AUSENCIAS";
+    }
+
     const data = {
         "fieldData": {
             "FechaDesde": fechaDesde,
             "FechaHasta": fechaFin,
             "Motivo": req.motivo,
             "Notas": req.Notas,
+            "Tipo": tipo,
         }
     };
     try {

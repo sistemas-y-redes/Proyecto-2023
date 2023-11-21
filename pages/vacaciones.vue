@@ -270,7 +270,6 @@ export default {
             this.vacacionActual.recordId = vacation.recordId;
         },
         async guardarCambios(vacation) {
-            console.log(vacation);
             // Aquí deberías actualizar la lista de vacaciones y posiblemente enviar los cambios al servidor
             if (!vacation) {
                 Swal.fire({
