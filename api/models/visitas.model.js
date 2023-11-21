@@ -424,7 +424,7 @@ visitasModel.updateVisita = async (id,body) => {
   }
 
   const update = await axios.patch(
-    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SeguimientoVisitasAPI/records/${id}`,
+    `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/VisitasServiciosAPI/records/${id}`,
     data,
     {
       httpsAgent: httpsAgent,
