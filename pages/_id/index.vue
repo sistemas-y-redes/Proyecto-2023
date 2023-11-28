@@ -340,6 +340,10 @@ export default {
                 title: "Oops...",
                 confirmButtonColor: "#000",
                 text: `La geolocalización no está disponible o el usuario no dio permiso. `,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = window.location.href
+                }
               });
               console.error(error);
               reject('La geolocalización no está disponible o el usuario no dio permiso.');
@@ -351,7 +355,11 @@ export default {
             title: "Oops...",
             confirmButtonColor: "#000",
             text: `La geolocalización no está disponible en tu navegador. `,
-          });
+          }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = window.location.href
+                }
+              });
           reject('La geolocalización no está disponible en tu navegador.');
         }
       });
@@ -392,7 +400,6 @@ export default {
       } catch (e) {
         this.error = true;
         console.log(e);
-        window.location.href = window.location.href
       }
       if (userLocation) {
         let data = {
@@ -411,12 +418,22 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data);
+            Swal.fire({
+              icon: "success",
+              title: "Enviado a Filemaker",
+              confirmButtonColor: "#000",
+              text: `Se ha enviado a Filemaker y será insertado en breves`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  console.log(response.data);
             this.$router.push(
               `${this.$route.path}/${response.data.replace("/", "")}`
             );
             this.loading = false;
             this.getVisita();
+                }
+              });
+            
           })
           .catch((error) => {
             console.log(error);
