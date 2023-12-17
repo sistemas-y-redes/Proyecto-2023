@@ -205,7 +205,55 @@ export default {
       let userLocation = "";
       try {
         userLocation = await this.getUserLocation();
-        console.log(userLocation);
+        const { value: comer } = await Swal.fire({
+          title: '¿Has parado para comer?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí',
+          cancelButtonText: 'No'
+        });
+        let horaComerInicio, horaComerFin;
+        if (comer) {
+          const { value: horarioComer } = await Swal.fire({
+            title: 'Indica el horario de comida',
+            html:
+              '<input id="hora-inicio" class="swal2-input" placeholder="Hora de inicio">' +
+              '<input id="hora-fin" class="swal2-input" placeholder="Hora de fin">',
+            focusConfirm: false,
+            preConfirm: () => {
+              return [
+                document.getElementById('hora-inicio').value,
+                document.getElementById('hora-fin').value
+              ]
+            }
+          });
+          horaComerInicio = horarioComer[0];
+          horaComerFin = horarioComer[1];
+        }
+        const { value: merendar } = await Swal.fire({
+          title: '¿Has parado para merendar?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí',
+          cancelButtonText: 'No'
+        });
+        if (merendar) {
+          const { value: horarioMerendar } = await Swal.fire({
+            title: 'Indica el horario de comida',
+            html:
+              '<input id="hora-inicioM" class="swal2-input" placeholder="Hora de inicio">' +
+              '<input id="hora-finM" class="swal2-input" placeholder="Hora de fin">',
+            focusConfirm: false,
+            preConfirm: () => {
+              return [
+                document.getElementById('hora-inicioM').value,
+                document.getElementById('hora-finM').value
+              ]
+            }
+          });
+          horaMerendarInicio = horarioMerendar[0];
+          horaMerendarFin = horarioMerendar[1];
+        }
         // Resto del código ...
       } catch (e) {
         this.error = true;

@@ -503,4 +503,27 @@ visitasModel.updatevisitas = async (id, req) => {
 
 };
 
+visitasModel.getVehicles = async (req) => {
+
+  try {
+    // console.log(req);
+    const response = await axios.get(
+      `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/RecursosApi/records`,
+      {
+        httpsAgent: httpsAgent,
+        headers: {
+          Authorization: `Bearer ${visitasModel.fmtoken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const properList = response.data.response.data;
+    return properList;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 module.exports = visitasModel;

@@ -157,17 +157,6 @@
             <div class="div-pestaña" v-if="this.pestañaActiva == 'Histórico'">
               <b-row v-if="checkHistorico() || this.$store.state.Horas.length > 0" class="lista-historica">
                 <!-- Las horas almacenadas en store -->
-                <div v-for="(element, index) in this.$store.state.Horas" :key="index" class="store-loading historico">
-                  <span>
-                    Día:<b> {{ element.Fecha }}</b> de
-                    <b>{{ corregirHoras(element.HoraInicio) }}h</b>
-                    a
-                    <b>{{ corregirHoras(element.HoraFin) }}h</b>
-                  </span>
-                  <p class="historico-texto">
-                    {{ element.Descripcion }}
-                  </p>
-                </div>
 
                 <!-- Contenido de seguimientos -->
                 <div v-for="(Linea, index) in visita.VisitasLineas" :key="index" class="historico row" v-if="Linea['VisitasLineas::Tipo'] === 'M.Obra' ? true : false && Linea
