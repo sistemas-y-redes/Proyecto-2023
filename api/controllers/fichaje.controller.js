@@ -81,7 +81,6 @@ router.get('/:id', [auth.validateAccess], async (req, res) => {
  * @return {JSON}
  */
 router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
-    console.log(req.params.id, req.body)
     const update = fichajeModel.updateFichaje(req.params.id, req.body);
 
     if (!update) {

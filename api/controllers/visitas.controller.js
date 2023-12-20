@@ -93,9 +93,6 @@ router.get('/servicio/:id/', [auth.validateAccess], async (req, res) => {
  * @return {JSON}
  */
 router.patch("/edit/:id", [auth.validateAccess], async (req, res) => {
-    console.log('estoy en el controlador');
-    console.log(req.params.id);
-    console.log(req.body);
     const update =  await visitasModel.updatevisitas(req.params.id, req.body);
 
     if (!update) {
@@ -176,6 +173,20 @@ router.post('/:id/seguimiento', [auth.validateAccess], async (req, res) => {
         return
     }
     res.end(JSON.stringify(seguimiento))
+})
+
+router.post('/vehicles', [auth.validateAccess], async (req, res) => {
+    const vehicles = await visitasModel.getVehicles();
+    console.log('controlador :');
+    console.log(vehicles);
+    
+    // Si no ha devuelto una visita devuelve error
+    if (!vehicles) {
+        res.status(400).send('Error message');
+        return;
+    }
+    res.end(JSON.stringify(vehicles));
+
 })
 
 module.exports = router

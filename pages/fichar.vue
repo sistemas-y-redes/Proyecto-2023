@@ -19,15 +19,15 @@
           <b-col class="text-center">
             <div v-if="this.ficha" class="boton-fichar">
               <b-button :variant="this.ficha[0].fieldData.ETaller ? 'success' : 'danger'"
-                :class="this.ficha[0].fieldData.STaller ? 'disabled' : 'btn-primary'"><b-icon icon="clock"
+                :disabled="!!this.ficha[0].fieldData.ETaller"><b-icon icon="clock"
                   v-if="this.ficha[0].fieldData.ETaller"></b-icon> Entrada</b-button>
             </div>
           </b-col>
           <b-col class="text-center">
             <div class="boton-fichar">
               <b-button :variant="this.ficha[0].fieldData.STaller ? 'success' : 'danger'"
-                :class="this.ficha[0].fieldData.STaller ? 'disabled' : 'btn-primary'" @click="endFichaje()"><b-icon
-                  icon="clock" v-if="this.ficha[0].fieldData.STaller"></b-icon> Salida</b-button>
+                :disabled="!!this.ficha[0].fieldData.STaller" @click="endFichaje()"><b-icon icon="clock"
+                  v-if="this.ficha[0].fieldData.STaller"></b-icon> Salida</b-button>
             </div>
           </b-col>
         </b-row>
@@ -203,9 +203,65 @@ export default {
       let tec = this.$store.state.User;
       let horaActual = this.obtenerHoraActual();
       let userLocation = "";
+      let noComida = "Si";
+      let noMerienda = "Si";
+      let comDesde = "";
+      let comHasta = "";
+      let merDesde = "";
+      let merHasta = "";
       try {
         userLocation = await this.getUserLocation();
-        console.log(userLocation);
+        const { value: merendar } = await Swal.fire({
+          title: '¿Has parado para merendar?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí',
+          cancelButtonText: 'No'
+        });
+        if (merendar) {
+          noMerienda = "";
+          const { value: horarioMerendar } = await Swal.fire({
+            title: 'Indica el horario de comida',
+            html:
+              '<input id="hora-inicioM" class="swal2-input" type="time" placeholder="Hora de inicio">' +
+              '<input id="hora-finM" class="swal2-input" type="time" placeholder="Hora de fin">',
+            focusConfirm: false,
+            preConfirm: () => {
+              return [
+                document.getElementById('hora-inicioM').value,
+                document.getElementById('hora-finM').value
+              ]
+            }
+          });
+          merDesde = horarioMerendar[0];
+          merHasta = horarioMerendar[1];
+        }
+        const { value: comer } = await Swal.fire({
+          title: '¿Has parado para comer?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí',
+          cancelButtonText: 'No'
+        });
+        if (comer) {
+          noComida = "";
+          const { value: horarioComer } = await Swal.fire({
+            title: 'Indica el horario de comida',
+            html:
+              '<input id="hora-inicio" class="swal2-input" type="time" placeholder="Hora de inicio">' +
+              '<input id="hora-fin" class="swal2-input" type="time" placeholder="Hora de fin">',
+            focusConfirm: false,
+            preConfirm: () => {
+              return [
+                document.getElementById('hora-inicio').value,
+                document.getElementById('hora-fin').value
+              ]
+            }
+          });
+          comDesde = horarioComer[0];
+          comHasta = horarioComer[1];
+        }
+
         // Resto del código ...
       } catch (e) {
         this.error = true;
@@ -214,7 +270,7 @@ export default {
       try {
         let response = await this.$axios.$patch(
           `/api/fichaje/edit/${this.fichaId}`,
-          { horaSalida: horaActual, UserLocation: userLocation, Tec: tec, fecha: this.fechaUbiFormat },
+          { horaSalida: horaActual, UserLocation: userLocation, Tec: tec, fecha: this.fechaUbiFormat, NoComida: noComida, NoMerienda: noMerienda, ComDesde: comDesde, ComHasta: comHasta, MerDesde: merDesde, MerHasta: merHasta },
           {
             headers: {
               Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
