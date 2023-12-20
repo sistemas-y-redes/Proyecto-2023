@@ -221,10 +221,10 @@ export default {
         if (merendar) {
           noMerienda = "";
           const { value: horarioMerendar } = await Swal.fire({
-            title: 'Indica el horario de comida',
+            title: 'Indica el horario de merienda',
             html:
-              '<input id="hora-inicioM" class="swal2-input" type="time" placeholder="Hora de inicio">' +
-              '<input id="hora-finM" class="swal2-input" type="time" placeholder="Hora de fin">',
+              '<input id="hora-inicioM" class="swal2-input" type="time" placeholder="Hora de inicio" value="11:00">' +
+              '<input id="hora-finM" class="swal2-input" type="time" placeholder="Hora de fin" value="11:15">',
             focusConfirm: false,
             preConfirm: () => {
               return [
@@ -248,8 +248,8 @@ export default {
           const { value: horarioComer } = await Swal.fire({
             title: 'Indica el horario de comida',
             html:
-              '<input id="hora-inicio" class="swal2-input" type="time" placeholder="Hora de inicio">' +
-              '<input id="hora-fin" class="swal2-input" type="time" placeholder="Hora de fin">',
+              '<input id="hora-inicio" class="swal2-input" type="time" placeholder="Hora de inicio" value="14:00">' +
+              '<input id="hora-fin" class="swal2-input" type="time" placeholder="Hora de fin" value="15:00">',
             focusConfirm: false,
             preConfirm: () => {
               return [
