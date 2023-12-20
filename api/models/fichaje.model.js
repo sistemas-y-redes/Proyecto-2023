@@ -22,7 +22,6 @@ fichajeModel.findFichaje = async (req) => {
     query.query[0].Fecha = req.Fecha;
   }
 
-  console.log(query)
   try {
     let respuesta = await axios.post(
       `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/InformesApi/_find`,
@@ -147,7 +146,13 @@ fichajeModel.getFichajeByRecordId = async (id) => {
 fichajeModel.updateFichaje = async (id, req) => {
   const data = {
     fieldData: {
-      STaller: req.horaSalida
+      STaller: req.horaSalida,
+      NoComida: req.NoComida,
+      NoMerienda: req.NoMerienda,
+      ComDesde: req.ComDesde,
+      ComHasta: req.ComHasta,
+      MerDesde: req.MerDesde,
+      MerHasta: req.MerHasta,
     }
   }
 
