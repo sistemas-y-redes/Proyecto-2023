@@ -50,7 +50,8 @@ usersModel.doLogin = async ({ usuario, password }) => {
       username: usuario,
       password,
       fmtoken,
-      EmpleadoNombre: userdata.data.response.data[0].fieldData.EmpleadoNombre
+      EmpleadoNombre: userdata.data.response.data[0].fieldData.EmpleadoNombre,
+      EmpleadoData:userdata.data.response.data[0].fieldData,
     }
     
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "24h" });

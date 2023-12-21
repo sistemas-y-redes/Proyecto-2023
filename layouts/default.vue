@@ -3,12 +3,17 @@
       <Topbar/>
       <div>
           <Nuxt />
+          <MenuTab />
       </div>
     </div>
 </template>
 <script>
+import MenuTab from '~/components/MenuTab.vue';
 export default {
-  middleware: "authentication"
+  middleware: "authentication",
+   components: {
+    MenuTab
+  }
 }
 </script>
 
