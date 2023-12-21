@@ -1,75 +1,10 @@
 <template>
   <div>
-    <div class="lista-tareas">
-      <div v-if="!this.loading && this.visitas" class="tareas-rows" :class="this.loading != true && this.visitas.length == 0
-        ? 'ocultar-tareas'
-        : ''
-        ">
-        <div v-for="(visita, index) in this.visitas.slice(0, limite)" :key="index" class="tarea">
-          <div class="mx-4 my-2">
-            <NuxtLink :to="`${visita.fieldData.NumeroServicio.replace('/', '')}`">
-              <p class="m-0 mes-texto">
-                <b>{{ convertirFecha(visita.fieldData["Fecha"], "mes") }}</b>
-              </p>
-              <h3 class="dia-mes">
-                <b>{{ convertirFecha(visita.fieldData["Fecha"], "día") }}</b>
-              </h3>
-            </NuxtLink>
-          </div>
-
-          <div class="mx-4 my-2">
-            <NuxtLink :to="`${visita.fieldData.NumeroServicio.replace('/', '')}`">
-              <div class="d-flex align-center mb-2" style="height:20px">
-                <small class="num-visita" style="line-height:1.2">{{ visita.fieldData.Numero }} </small> <b-badge
-                  class="ml-2"
-                  :variant="visita.fieldData.TipoSat == 'REPARACIÓN' ? 'primary' : visita.fieldData.TipoSat == 'MANTENIMIENTO' ? 'success' : 'danger'">{{
-                    visita.fieldData.TipoSat }}</b-badge>
-              </div>
-
-              <span class="nombre-cliente">{{ visita.fieldData["Cliente"] }}</span>
-
-              <p class="texto-tarea">
-                {{ visita.fieldData["Motivo Avería"] }}
-              </p>
-            </NuxtLink>
-          </div>
-        </div>
-
-        <div class="boton-carga-parent">
-          <div class="boton-carga-parent d-flex">
-            <button v-if="limite < this.visitas.length" style="z-index: 9" class="boton-carga" @click="limite += 5">
-              Cargar más
-            </button>
-            <span style="width:55%" v-if="limite >= this.visitas.length">Límite {{ this.visitas.length }} registros
-              alcanzado</span>
-
-
-
-            <button v-if="limite > 5" style="z-index: 9" class="boton-carga" @click="limite -= 5">
-              Ocultar
-            </button>
-          </div>
-        </div>
-        <div>
-
-          <NuxtLink to="/fichar" class="text-white boton-carga text-center"> Registro horario </NuxtLink>
-
-        </div>
-        <div>
-
-          <NuxtLink to="/vacaciones" class="text-white boton-carga text-center"> Solicitar Vacaciones </NuxtLink>
-
-        </div>
-
-      </div>
-
-      <div v-if="this.loading === true" class="spinner-parent">
-        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-        <p>Cargando...</p>
-      </div>
+    <div class="mensaje-bienvenida">
+      <p>Bienvenido a nuestra gestor de tareas {{ this.$store.state.User }}</p>
     </div>
 
-    <div v-if="this.loading === false && (this.visitas.length == 0 || !this.visitas)" class="no-data">
+    <div class="no-data">
       <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" width="250" height="250" viewBox="0 0 485.83373 483.5"
         xmlns:xlink="http://www.w3.org/1999/xlink">
         <path
@@ -158,7 +93,6 @@
         <path d="M498.08314,691.75h-140a1,1,0,1,1,0-2h140a1,1,0,0,1,0,2Z" transform="translate(-357.08314 -208.25)"
           fill="#ccc" />
       </svg>
-      <p class="ml-2 text-center">No hay tareas a mostrar</p>
     </div>
   </div>
 </template>
@@ -175,55 +109,9 @@ export default {
     };
   },
   methods: {
-    async getVisitas() {
-      let tec = this.$store.state.User
-      try {
-        let response = await this.$axios.$post("/api/visitas/", {
-          user: tec,
-          headers: {
-            Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
-          },
-        });
-        this.visitas = response;
-
-      } catch (e) {
-        this.error = true;
-        console.log(e);
-      }
-      this.loading = false;
-    },
-    convertirFecha(fecha, tipo) {
-      if (tipo === "día") {
-        const dia = fecha.split("/");
-        const diaFinal = dia[1];
-        return diaFinal;
-      } else {
-        const mes = fecha.split("/");
-        const meses = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-        let fechaFinal = new Date(`${mes[2]}/${mes[0]}/${mes[1]}`.replace(/-/g, "/"));
-        let mesIndex = fechaFinal.getMonth()
-        let nombreMes = meses[mesIndex];
-        let nombreFinal = nombreMes.substring(0, 3);
-        nombreFinal += ".";
-        return nombreFinal;
-      }
-    },
+    
   },
   mounted() {
-    this.getVisitas();
   },
 };
 </script>
@@ -341,4 +229,11 @@ a {
   padding: 0.4rem;
   border-radius: 0.2rem;
 }
+.mensaje-bienvenida {
+  text-align: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  /* Otros estilos que desees aplicar */
+}
+
 </style>

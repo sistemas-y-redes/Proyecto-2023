@@ -414,7 +414,7 @@
         pestañaActiva == 'Histórico' &&
         this.loading === false &&
         visita.visitaFieldata.EstadoServicio == 'PENDIENTE'
-        " class="añadir">
+        " class="añadir" style="padding-bottom: 60px;">
         <b-icon @click="FormActive = true" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>
 
@@ -423,7 +423,7 @@
         pestañaActiva === 'Adjuntos' &&
         this.loading === false &&
         visita.visitaFieldata.EstadoServicio == 'PENDIENTE'
-        " class="añadir">
+        " class="añadir" style="padding-bottom: 60px;">
         <label>
           <b-icon style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
           <b-form-file style="display: none" :state="Boolean(archivoSubir)" accept=".jpg, .png, .pdf, .webp, .jpeg"
@@ -437,7 +437,7 @@
         pestañaActiva === 'Materiales' &&
         this.loading === false &&
         visita.visitaFieldata.EstadoServicio == 'PENDIENTE'
-        " class="añadir">
+        " class="añadir" style="padding-bottom: 60px;">
         <b-icon @click="FormActive = true" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>
     </div>

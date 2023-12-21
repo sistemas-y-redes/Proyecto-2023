@@ -3,7 +3,11 @@
         <div class="boton-retorno mb-4">
             <NuxtLink to="/">&lt; <span>VOLVER</span></NuxtLink>
         </div>
-        <div class="vacationForm vacation-section">
+        <div v-if="this.loading === true" class="spinner-parent">
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            <p>Cargando...</p>
+        </div>
+        <div class="vacationForm vacation-section" v-if="this.loading === false">
             <label>Seleccionar período de vacaciones:</label>
             <div>
                 <label for="startDate">Fecha de inicio:</label>
@@ -41,7 +45,7 @@
             </b-button>
         </div>
         <!-- El resto de tu contenido existente -->
-        <div v-if="vacations && vacations.length > 0" class="vacation-section">
+        <div v-if="vacations && vacations.length > 0 && this.loading === false" class="vacation-section">
             <h2>Vacaciones Solicitadas</h2>
             <ul class="vacation-list">
                 <li v-for="(vacation, index) in vacations" :key="index" class="vacation-item">
@@ -78,14 +82,16 @@
                         <b-row class="form-option my-3">
                             <label for="editStartDate">Fecha de inicio:</label>
                             <datepicker id="editStartDate" v-model="vacacionActual.FechaDesde" :format="customFormatter"
-                                :disabled-dates="disabledDates" input-class="form-input form-control" :calendar-class="calendarCentered">
+                                :disabled-dates="disabledDates" input-class="form-input form-control"
+                                :calendar-class="calendarCentered">
                             </datepicker>
                         </b-row>
                         <b-row class="form-option my-3">
                             <label for="editEndDate">Fecha de fin:</label>
                             <datepicker id="editEndDate" v-model="vacacionActual.FechaHasta" :format="customFormatter"
                                 :disabled-dates="calculateDisabledEndDates(vacacionActual.FechaDesde)"
-                                :disabled="!vacacionActual.FechaDesde" input-class="form-input form-control" :calendar-class="calendarCentered">
+                                :disabled="!vacacionActual.FechaDesde" input-class="form-input form-control"
+                                :calendar-class="calendarCentered">
                             </datepicker>
                         </b-row>
                         <b-row class="form-option my-3">
@@ -129,6 +135,7 @@ export default {
     },
     data() {
         return {
+            loading: true,
             startDate: null,
             endDate: null,
             vacationReason: '',
@@ -332,7 +339,6 @@ export default {
 </script>
   
 <style scoped>
-
 /* Estilos generales para móviles */
 div {
     padding: 0 15px;
@@ -435,6 +441,7 @@ h2 {
     border-radius: 50%;
     margin-left: 5px;
 }
+
 .estado-container {
     white-space: nowrap;
     overflow: hidden;
@@ -489,20 +496,23 @@ h2 {
     height: 50px;
     width: -webkit-fill-available;
 }
+
 ::v-deep .form-input {
-  width: 100%; /* Make the input take the full width of its parent */
-  box-sizing: border-box;
-  border: 0.5px solid #CCCCCC;
-  background-color: white !important; /* Include padding and border in the element's total width and height */
-  /* Add any additional styling you need here */
+    width: 100%;
+    /* Make the input take the full width of its parent */
+    box-sizing: border-box;
+    border: 0.5px solid #CCCCCC;
+    background-color: white !important;
+    /* Include padding and border in the element's total width and height */
+    /* Add any additional styling you need here */
 
 }
 
 ::v-deep .datepicker-popup {
-    position: fixed; /* or absolute, depending on how your datepicker positions the popup */
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+    position: fixed;
+    /* or absolute, depending on how your datepicker positions the popup */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
-
 </style>

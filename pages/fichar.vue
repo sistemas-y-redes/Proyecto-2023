@@ -7,13 +7,13 @@
     <div class="boton-retorno mb-4">
       <NuxtLink to="/">&lt; <span>VOLVER</span></NuxtLink>
     </div>
-    <div class="mx-4">
+    <div class="mx-4" >
       <div v-if="!this.ficha && this.loading === false">
         Este técnico no ha fichado día {{ this.formatearFecha(this.dia) }}, ¿deseas fichar?
         <div class="w-100 d-flex mt-2"><b-button variant="primary" class="mx-auto" @click="setFichaje()">Fichar</b-button>
         </div>
       </div>
-      <div v-if="this.ficha && !this.loading">
+      <div v-if="this.ficha && this.loading === false">
         <h2 class="text-center">Día: {{ this.formatearFecha(this.dia) }}</h2>
         <b-row class="mt-4">
           <b-col class="text-center">
@@ -161,6 +161,7 @@ export default {
         console.log(e);
       }
       this.loading = false;
+      console.log(this.loading);
     },
     async setFichaje() {
       let tec = this.$store.state.User;
@@ -289,10 +290,8 @@ export default {
 
   },
   mounted() {
-    console.log(this.$store.state);
     this.getTodayDate();
     this.getFichaje();
-    this.loading = false;
   },
 };
 </script>

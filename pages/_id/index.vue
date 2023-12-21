@@ -104,7 +104,7 @@
     </div>
 
     <!-- Contenido en caso de éxito -->
-    <div v-else>
+    <div v-else style="padding-bottom: 50px;">
       <!-- Contenido ya cargado -->
       <div v-if="!this.loading">
         <!-- Contenido seguimiento ya cargado -->
@@ -270,7 +270,7 @@
         </div>
       </div>
       <!-- Botón de  en Visita -->
-      <div v-if="pestañaActiva === 'Visita' && this.loading === false" class="añadir">
+      <div v-if="pestañaActiva === 'Visita' && this.loading === false" class="añadir" style="padding-bottom: 60px;">
         <b-icon @click="crearVisita()" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>
     </div>

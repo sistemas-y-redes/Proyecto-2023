@@ -34,6 +34,7 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico?v=2' },
+      { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css' },
       { rel:'apple-touch-icon', type:'image/png', href: `${process.env.MODE == 'desarrollo' ? 'http://192.168.200.125:3000/' : 'https://proyecto2023.aplicacionesinteligentes.es/'}apple-touch-icon.png` }
     ]
   },
