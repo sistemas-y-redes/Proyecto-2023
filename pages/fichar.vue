@@ -1,5 +1,5 @@
 <template>
-  <div class="nuxt-content">
+  <div style="flex-direction: column;">
     <div v-if="this.loading === true" class="spinner-parent">
       <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
       <p>Cargando...</p>
@@ -149,6 +149,7 @@ export default {
 
         if (response == 'Vacio!') {
           this.ficha = false;
+          this.loading = false;
           return;
         }
 
@@ -159,6 +160,7 @@ export default {
       } catch (e) {
         this.error = true;
         console.log(e);
+        this.loading = false;
       }
       this.loading = false;
       console.log(this.loading);
