@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+    <PageTitle title="Proyectos" />
     <div class="app-box">
       <b-container>
         <!-- Barra de búsqueda -->
@@ -16,8 +17,8 @@
         <b-row>
           <b-spinner v-if="loading" class="loader" variant="danger"></b-spinner>
           <ul>
-            <li v-for="(project, index) in projects" :key="index" v-if="render">
-              <ListsItemProject @clickAddTask="openAddTaskForm" @loadProject="loadProject" :project="project" />
+            <li v-for="(project, index) in this.projects" :key="index" v-if="render">
+              <ListsItemProject  @loadProject="loadProject" :project="project" />
               <hr />
             </li>
           </ul>
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-// import moment from "moment";
+import moment from "moment";
 import Swal from "sweetalert2";
 
 export default {
@@ -54,32 +55,32 @@ export default {
     };
   },
   computed: {
-    // projectsWithTasks() {
-    //   // Relacionamos las tareas con los proyectos y se ordenan
-    //   let projectsWithTasks = [];
+    projectsWithTasks() {
+      // Relacionamos las tareas con los proyectos y se ordenan
+      let projectsWithTasks = [];
 
-    //   this.projects.forEach((project) => {
-    //     const taskFromProject = this.tasks.find(task =>
-    //         project.fieldData.ProyectoNumero === task.fieldData.Proyecto
-    //     );
+      this.projects.forEach((project) => {
+        const taskFromProject = this.tasks.find(task =>
+          project.fieldData.ProyectoNumero === task.fieldData.Proyecto
+        );
 
-    //     if (taskFromProject) {
-    //       project.tasks = taskFromProject;
-    //       project.fieldData.Inicio = taskFromProject.fieldData.Inicio;
-    //     }
-    //     projectsWithTasks.push(project)
-    //   });
+        if (taskFromProject) {
+          project.tasks = taskFromProject;
+          project.fieldData.Inicio = taskFromProject.fieldData.Inicio;
+        }
+        projectsWithTasks.push(project)
+      });
 
-    //   return [...projectsWithTasks].sort((a, b) =>
-    //     (Object.hasOwn(a.fieldData, "Inicio") ? a.fieldData.Inicio : "") >
-    //     (Object.hasOwn(b.fieldData, "Inicio") ? b.fieldData.Inicio : "")
-    //       ? -1
-    //       : (Object.hasOwn(b.fieldData, "Inicio") ? b.fieldData.Inicio : "") >
-    //         (Object.hasOwn(a.fieldData, "Inicio") ? a.fieldData.Inicio : "")
-    //       ? 1
-    //       : 0
-    //   );
-    // },
+      return [...projectsWithTasks].sort((a, b) =>
+        (Object.hasOwn(a.fieldData, "Inicio") ? a.fieldData.Inicio : "") >
+          (Object.hasOwn(b.fieldData, "Inicio") ? b.fieldData.Inicio : "")
+          ? -1
+          : (Object.hasOwn(b.fieldData, "Inicio") ? b.fieldData.Inicio : "") >
+            (Object.hasOwn(a.fieldData, "Inicio") ? a.fieldData.Inicio : "")
+            ? 1
+            : 0
+      );
+    },
   },
   methods: {
     loadProject(project) {
@@ -100,12 +101,11 @@ export default {
 
     async getProjects() {
       // Obtenemos proyectos
-      this.projects = [];
       this.loading = true;
-      const url = "/api/projects/";
+      const url = "/api/proyectos/";
 
       try {
-        let response = await this.$axios.$post(
+        let response = await this.$axios.$get(
           url,
           {
             headers: {
@@ -113,53 +113,36 @@ export default {
             },
           }
         );
-        console.log(response);
-        if (response instanceof Object) {
-          this.projects = response.data.projects;
-        }
+
+        this.projects = response.response.data;
+        this.loading = false;
+        this.render = true;
 
       } catch (e) {
         this.error = true;
         console.log(e);
+        this.loading = false;
       }
-
-
-      // this.$axios
-      //   .get(url, {
-      //     headers: { Authorization: `Bearer ${this.$cookies.get("TOKEN")}` },
-      //   })
-      //   .then((response) => {
-      //     console.log(response.data.projects);
-      //     this.projects = response.data.projects;
-      //     // this.getTasksFromUser();
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   })
-      //   .finally(() => {
-      //     console.log(response.data.projects);
-      //     this.loading = false;
-      //   });
     },
-    // getTasksFromUser() {
-    //   // Obtenemos las tareas de los proyectos de un usuario
-    //   const url = `/api/projects/user`;
-    //   this.$axios
-    //     .get(url, {
-    //       headers: { Authorization: `Bearer ${this.$cookies.get("TOKEN")}` },
-    //     })
-    //     .then((response) => {
-    //       this.tasks = response.data.tasks;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     })
-    //     .finally(() => {
-    //       this.render = true;
-    //     });
-    // },
+    getTasksFromUser() {
+      // Obtenemos las tareas de los proyectos de un usuario
+      const url = `/api/projects/user`;
+      this.$axios
+        .get(url, {
+          headers: { Authorization: `Bearer ${this.$cookies.get("TOKEN")}` },
+        })
+        .then((response) => {
+          this.tasks = response.data.tasks;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.render = true;
+        });
+    },
   },
-  mounted() {
+  created() {
     this.getProjects();
     // Event Listener
     // this.$nuxt.$on("clickAddTask", (project) => {

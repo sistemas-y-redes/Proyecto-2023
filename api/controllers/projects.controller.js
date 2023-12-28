@@ -8,15 +8,18 @@
 const projectsModel = require('../models/projects.model.js');
 
 // Importamos los módulos necesarios para el funcionamiento del controlador
-const express = require('express');
+
+const { Router } = require('express')
 const auth = require("../auth.js");
-const router = express();
-const bodyParser = require('body-parser');
+
+const router = Router()
+const bodyParser = require('body-parser')
+router.use(bodyParser.json())
+router.use(bodyParser.urlencoded({ extended: true }))
 // const moment = require('moment');
 
 // moment().format()
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+
 
 /**
  * @url /api/projects/
@@ -25,30 +28,34 @@ router.use(bodyParser.urlencoded({ extended: true }));
  * @return {JSON}
  */
 router.get("/", [auth.validateAccess], async (req, res) => {
-    // if (req.user.group == "") {
-    //     res.status(403);
-    //     res.send( { code: 403, message: "No tienes acceso a la sección de proyectos" } );
-    //     return;
-    // }
-    console.log('hola buenas tardes');
+
+    console.log('estoy en el controlador');
+    console.log(req.user.fmtoken);
+    
     projectsModel.fmtoken = req.user.fmtoken;
     
-    // const id = req.user.group == "Grupo Técnicos" ? req.user.id : "*";
-    // const search = req.query.search || "";
-    const projects = await projectsModel.getProjects();
+    const id = "*";
+    const search = "";
+    const projects = await projectsModel.getProjects(id, search);
+
+    console.log('proyectos:');
+    console.log(projects);
 
     if (!projects) {
-        res.status(500);
-        res.send( { code: 500, message: "Error obteniendo listado de proyectos" } );
-        return;
+        res.writeHead(500)
+        res.end()
+        return
     }
 
     if (projects.length < 0) {
-        res.status(404);
-        res.send( { code: 404, message: "No se ha encontrado ningún registro" } );
-        return;
+        res.writeHead(500)
+        res.end()
+        return
     }
     res.end(JSON.stringify(projects))
+
+    // res.status(200);
+    // res.send( { code: 200, projects } );
 })
 
 /**
@@ -57,34 +64,34 @@ router.get("/", [auth.validateAccess], async (req, res) => {
  * @description Llamada para obtener el listado de tareas
  * @return {JSON}
  */
-// router.get("/tasks/", [auth.validateAccess], async (req, res) => {
-//     if (req.user.group == "") {
-//         res.status(403);
-//         res.send( { code: 403, message: "No tienes acceso a la sección de tareas" } );
-//         return;
-//     }
+router.get("/tasks/", [auth.validateAccess], async (req, res) => {
+    if (req.user.group == "") {
+        res.status(403);
+        res.send( { code: 403, message: "No tienes acceso a la sección de tareas" } );
+        return;
+    }
 
-//     projectsModel.fmtoken = req.user.fmtoken;
+    projectsModel.fmtoken = req.user.fmtoken;
     
-//     const id = req.user.username;
-//     const search = req.query.search || "";
-//     const tasks = await projectsModel.getTasks(id, search);
+    const id = req.user.username;
+    const search = req.query.search || "";
+    const tasks = await projectsModel.getTasks(id, search);
 
-//     if (!tasks) {
-//         res.status(500);
-//         res.send( { code: 500, message: "Error obteniendo listado de tareas" } );
-//         return;
-//     }
+    if (!tasks) {
+        res.status(500);
+        res.send( { code: 500, message: "Error obteniendo listado de tareas" } );
+        return;
+    }
 
-//     if (tasks.length < 0) {
-//         res.status(404);
-//         res.send( { code: 404, message: "No se ha encontrado ningún registro" } );
-//         return;
-//     }
+    if (tasks.length < 0) {
+        res.status(404);
+        res.send( { code: 404, message: "No se ha encontrado ningún registro" } );
+        return;
+    }
 
-//     res.status(200);
-//     res.send( { code: 200, tasks } );
-// })
+    res.status(200);
+    res.send( { code: 200, tasks } );
+})
 
 /**
  * @url /api/projects/user
@@ -127,47 +134,47 @@ router.get("/user", [auth.validateAccess], async (req, res) => {
  * @description Llamada que introduce una nueva tarea en FileMaker
  * @return {JSON}
  */
-// router.post("/tasks/new", [auth.validateAccess], async (req, res) => {
-//     projectsModel.fmtoken = req.user.fmtoken;
+router.post("/tasks/new", [auth.validateAccess], async (req, res) => {
+    projectsModel.fmtoken = req.user.fmtoken;
 
-//     // Comprobamos que los campos necesarios se han rellenado
-//     if (!req.body.start || !req.body.projectToAddTask) {
-//         res.status(400);
-//         res.send( { code: 400, message: "No se ha relleando toda la información requerida para esta acción" } );
-//         return;
-//     }
+    // Comprobamos que los campos necesarios se han rellenado
+    if (!req.body.start || !req.body.projectToAddTask) {
+        res.status(400);
+        res.send( { code: 400, message: "No se ha relleando toda la información requerida para esta acción" } );
+        return;
+    }
     
-//     // Creamos el objeto de la tarea a introducir en FileMaker
-//     const task = { 
-//         Fecha: moment().format("MM/DD/YYYY"),  
-//         Usuario: req.user.username,
-//         Inicio: req.body.start,
-//         Proyecto: req.body.projectToAddTask,
+    // Creamos el objeto de la tarea a introducir en FileMaker
+    const task = { 
+        Fecha: moment().format("MM/DD/YYYY"),  
+        Usuario: req.user.username,
+        Inicio: req.body.start,
+        Proyecto: req.body.projectToAddTask,
 
-//     }
+    }
 
-//     const data = await projectsModel.insertTaskIntoProject(task);
+    const data = await projectsModel.insertTaskIntoProject(task);
 
-//     if (data == null || data == false) {
-//         res.status(500);
-//         res.send( { code: 500, message: "Error insertando la tarea en Filemaker", task } );
-//         return;
-//     }
+    if (data == null || data == false) {
+        res.status(500);
+        res.send( { code: 500, message: "Error insertando la tarea en Filemaker", task } );
+        return;
+    }
 
-//     // Guardamos la ubicación de usuario
-//     const action = "INICIO HORAS"
-//     const saveLocation = projectsModel.insertLocation(req.body.Location, action)
+    // Guardamos la ubicación de usuario
+    const action = "INICIO HORAS"
+    const saveLocation = projectsModel.insertLocation(req.body.Location, action)
     
-//     if (!saveLocation) {
-//         res.status(200);
-//         res.send( { code: 200, message: "Tarea insertada pero ubicación de usuario no guardada" } );
-//         return;
-//     }
+    if (!saveLocation) {
+        res.status(200);
+        res.send( { code: 200, message: "Tarea insertada pero ubicación de usuario no guardada" } );
+        return;
+    }
 
-//     res.status(201);
-//     // Devuelvo la tarea creada para poder finalizarla en la misma pantalla sin actualizar
-//     res.send( { code: 201, message: "Tarea correctamente insertada en el proyecto " + req.body.projectToAddTask, data } );
-// });
+    res.status(201);
+    // Devuelvo la tarea creada para poder finalizarla en la misma pantalla sin actualizar
+    res.send( { code: 201, message: "Tarea correctamente insertada en el proyecto " + req.body.projectToAddTask, data } );
+});
 
 
 

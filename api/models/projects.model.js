@@ -7,8 +7,9 @@
 const projectsModel = {};
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const serverName = process.env.FM_SERVER;
-// const moment = require("moment")
+const moment = require("moment");
+const https = require("https");
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 projectsModel.fmtoken = "";
 
@@ -17,43 +18,46 @@ projectsModel.fmtoken = "";
  * @description Obtenemos un listado de proyectos
  * @returns     {bool}
  */
-projectsModel.getProjects = () => {
-  // let query = [];
-  // console.log("id");
-  // console.log(id);
+projectsModel.getProjects = async (id = "*", search = "") => {
+  let query = [];
 
-  // if (search) {
-  //   const searchFields = ["NombreEmpresa", "DescripcionProyecto", "ProyectoNumero"];
-  //   searchFields.forEach((field) => {
-  //     let obj = {
-  //       ResponsableCodigo: id,
-  //     };
-  //     obj[field] = search;
-  //     query.push(obj);
-  //   });
-  // } else {
-  //   query.push({
-  //     ResponsableCodigo: id,
-  //   });
-  // }
-  // console.log("query");
-  // console.log(query);
-  return axios
-    .post(
-      `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/ProyectosAPI/_find`,
+  if (search) {
+    const searchFields = ["NombreEmpresa", "DescripcionProyecto", "ProyectoNumero"];
+    searchFields.forEach((field) => {
+      let obj = {
+        ResponsableCodigo: id,
+      };
+      obj[field] = search;
+      query.push(obj);
+    });
+  } else {
+    query.push({
+      ResponsableCodigo: id,
+    });
+  }
+  console.log(process.env.FM_SERVER);
+  console.log(process.env.FM_DATABASE);
+  console.log(query);
+  console.log()
+
+  try {
+    let respuesta = await axios.get(
+      `https://${process.env.FM_SERVER}/fmi/data/v1/databases/${process.env.FM_DATABASE}/layouts/ProyectosAPI/records`,
       {
-        // query: query,
-        // limit: 600,
-      },
-      {
+        httpsAgent: httpsAgent,
         headers: {
-          Authorization: `Bearer ${projectsModel.fmtoken}`,
           "Content-Type": "application/json",
+          Authorization: `Bearer ${projectsModel.fmtoken}`,
         },
       }
-    )
-    .then((response) => response.data.response.data)
-    .catch((error) => error);
+    );
+    const proyectos = respuesta.data;
+    console.log(proyectos);
+    return proyectos;
+  } catch (error) {
+    console.log("Error en encontrar proyectos: " + error);
+    return false;
+  }
 };
 
 /**
@@ -196,25 +200,25 @@ projectsModel.insertTaskIntoProject = async ({
  * @param       {string} action     La acción realizada. En este caso "INICIO HORAS" o "FINALIZAR VISITA"
  * @returns     {bool}
  */
-// projectsModel.insertLocation = async ({ longitude, latitude, altitude }, action) => {
-//   // Insertamos el registro en la tabla de tareas
-//   const fieldData = {
-//     fieldData: { Ubicación: `+${latitude}, +${longitude}, +${altitude}`, Cliente: action, FechaHora: moment().format("MM/DD/YYYY HH:mm:ss")},
-//   };
-//   console.log(fieldData)
-//   const insert = await axios.post(
-//     `https://${process.env.FM_SERVER}/fmi/data/v1/databases/${process.env.FM_DATABASE}/layouts/UbicacionesAPI/records`,
-//     fieldData,
-//     {
-//       headers: {
-//         Authorization: `Bearer ${projectsModel.fmtoken}`,
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
+projectsModel.insertLocation = async ({ longitude, latitude, altitude }, action) => {
+  // Insertamos el registro en la tabla de tareas
+  const fieldData = {
+    fieldData: { Ubicación: `+${latitude}, +${longitude}, +${altitude}`, Cliente: action, FechaHora: moment().format("MM/DD/YYYY HH:mm:ss")},
+  };
+  console.log(fieldData)
+  const insert = await axios.post(
+    `https://${process.env.FM_SERVER}/fmi/data/v1/databases/${process.env.FM_DATABASE}/layouts/UbicacionesAPI/records`,
+    fieldData,
+    {
+      headers: {
+        Authorization: `Bearer ${projectsModel.fmtoken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
-//   return insert ? { recordId: insert.data.response.recordId, fieldData: fieldData } : false;
-// };
+  return insert ? { recordId: insert.data.response.recordId, fieldData: fieldData } : false;
+};
 
 /**
  * @name        updateTask
