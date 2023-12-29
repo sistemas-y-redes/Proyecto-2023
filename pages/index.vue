@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="mensaje-bienvenida">
-      <p>Bienvenido a nuestra gestor de tareas {{ this.$store.state.UserInfo.EmpleadoNombre }}</p>
+      <p v-if="userInfo">
+      Bienvenido a nuestro gestor de tareas {{ userInfo.EmpleadoNombre }}
+    </p>
     </div>
 
     <div class="no-data">
@@ -110,6 +112,11 @@ export default {
   },
   methods: {
     
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.UserInfo || {}; // Proporciona un objeto vacío como respaldo
+    }
   },
   mounted() {
   },
