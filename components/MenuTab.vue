@@ -14,11 +14,14 @@
 <script>
 export default {
     computed: {
-        // Esta propiedad calculada filtra los links basados en los permisos del usuario.
+        isEncargadoOrGerente() {
+            const userInfo = this.$store.state.UserInfo;
+            return userInfo ? (userInfo.GrupoPermisos === 'ENCARGADO' || userInfo.GrupoPermisos === 'GERENTE') : false;
+        },
         filteredLinks() {
             return this.links.filter(link => {
                 if (link.name === 'Proyectos') {
-                    return this.hasProjectAccess();
+                    return this.isEncargadoOrGerente;
                 }
                 return true;
             });
@@ -61,13 +64,9 @@ export default {
         };
     },
     methods: {
-        // Método para verificar si el usuario tiene acceso al tab de proyectos.
-        hasProjectAccess() {
-            // Verifica si el usuario es 'ENCARGADO' o 'GERENTE'.
-            const userRole = this.$store.state.UserInfo.GrupoPermisos;
-            return userRole === 'ENCARGADO' || userRole === 'GERENTE';
-        }
-    }
+
+    },
+
 };
 </script>
   
@@ -77,7 +76,7 @@ export default {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(12.5px);
     -webkit-backdrop-filter: blur(12.5px);
-    
+
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -85,9 +84,12 @@ export default {
     padding: 2% 0%;
     width: 100vw;
 
-    position: fixed; /* Fija el menú en una posición absoluta */
-    bottom: 0;       /* Ubica el menú en la parte inferior de la pantalla */
-    left: 0;         /* Asegura que el menú se extienda desde el lado izquierdo */
+    position: fixed;
+    /* Fija el menú en una posición absoluta */
+    bottom: 0;
+    /* Ubica el menú en la parte inferior de la pantalla */
+    left: 0;
+    /* Asegura que el menú se extienda desde el lado izquierdo */
 }
 
 .navigation-link {
