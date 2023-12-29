@@ -9,7 +9,7 @@ export default async ({ $axios, store, redirect, app, route }) => {
         });
 
         if (res) {
-            //store.commit('saveUser', res.data.username);
+            store.commit('saveUser', res.data.username);
             //store.commit('saveUserGroup', res.data.GrupoPermisos);
             //store.commit('saveEmpleado', res.data.empleadoNombre);
         }
