@@ -45,8 +45,6 @@ usersModel.doLogin = async ({ usuario, password }) => {
     if (!userdata || !userdata.data || !userdata.data.response || !userdata.data.response.data[0]) {
       throw new Error('Datos de usuario inválidos desde la API de FileMaker.');
     }
-    console.log('pruebas');
-    console.log(userdata.data)
     let user = {
       username: usuario,
       password,

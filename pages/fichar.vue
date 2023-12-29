@@ -162,7 +162,6 @@ export default {
         this.loading = false;
       }
       this.loading = false;
-      console.log(this.loading);
     },
     async setFichaje() {
       let tec = this.$store.state.User;

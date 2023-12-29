@@ -1,7 +1,6 @@
 export default ({ store }) => {
     if (process.browser) {
         window.onNuxtReady(() => {
-            console.log('hola q tal');
             if (localStorage.getItem('User')) {
                 store.commit('saveUser', JSON.parse(localStorage.getItem('User')));
             }
