@@ -35,7 +35,6 @@ fichajeModel.findFichaje = async (req) => {
       }
     );
     const fichaje = respuesta.data.response.data;
-    console.log(fichaje);
     return fichaje;
   } catch (error) {
     console.log("Error en encontrar Fichaje: " + error);
@@ -72,7 +71,6 @@ fichajeModel.newFichaje = async (req) => {
     }
   );
 
-  console.log(respuesta)
   if (!respuesta) {
     console.log("Error al crear nuevo informe");
     return false;

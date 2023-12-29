@@ -42,7 +42,6 @@ auth.checkFilemakerToken = async token => {
  * @returns     {string}
  */
 auth.renewFilemakerToken = async ({ usuario, password }) => {
-  console.log("renovar token")
   return axios
     .post(
       `https://${process.env.FM_SERVER}/fmi/data/v1/databases/${process.env.FM_DATABASE}/sessions`,

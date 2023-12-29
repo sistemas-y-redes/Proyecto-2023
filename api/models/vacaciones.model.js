@@ -225,7 +225,6 @@ vacacionesModel.updatevacaciones = async (id, req) => {
                     continue;
                 }
                 if (seSolapan(fechaDesde, fechaFin, vacacion.fieldData.FechaDesde, vacacion.fieldData.FechaHasta)) {
-                    console.log("se solapan las fechas");
                     return false;
                 }
             }

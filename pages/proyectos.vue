@@ -17,8 +17,8 @@
         <b-row>
           <b-spinner v-if="loading" class="loader" variant="danger"></b-spinner>
           <ul>
-            <li v-for="(project, index) in this.projects" :key="index" v-if="render">
-              <ListsItemProject  @loadProject="loadProject" :project="project" />
+            <li v-for="(project, index) in filteredProjects" :key="index" v-if="render">
+              <ListsItemProject @loadProject="loadProject" :project="project" />
               <hr />
             </li>
           </ul>
@@ -80,6 +80,10 @@ export default {
             ? 1
             : 0
       );
+    },
+    filteredProjects() {
+      const filtered = this.projects.filter(project => project.fieldData.Estado !== 'TERMINADO');
+      return filtered;
     },
   },
   methods: {
@@ -153,6 +157,7 @@ export default {
 </script>
 
 <style scoped>
+
 li {
   list-style: none;
   padding: 2% 0;

@@ -7,8 +7,11 @@ export const mutations = {
     saveUser(state, User) {
         state.User = User;
     },
-    saveEmpleado(state, EmpleadoNombre){
+    saveEmpleado(state, EmpleadoNombre) {
         state.EmpleadoNombre = EmpleadoNombre;
+    },
+    saveUserInfo(state, UserInfo) {
+        state.UserInfo = UserInfo;
     },
     insertHora(state, Hora) {
         state.Horas.push(Hora);

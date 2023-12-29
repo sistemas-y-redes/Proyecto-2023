@@ -2,12 +2,12 @@
     <div class="project-item" :class="timer ? 'task-started' : ''">
       <div class="details">
         <div class="estado">
-          <span class="estado-color" :class="`estado-${estadoFormateado}`"></span>
-          {{ project.fieldData.Estado }}
+          <span class="estado-color " :class="`estado-${estadoFormateado}`"></span>
+          {{ estadoFormateado }}
         </div>
         <div class="subtitle">
           {{ project.fieldData.ProyectoNumero }} |
-          {{ project.fieldData.NombreEmpresa }}
+          <strong>{{ project.fieldData.NombreEmpresa }}</strong>
         </div>
         <div class="description">{{ project.fieldData.DescripcionProyecto }}</div>
         <div class="subtitle" v-if="timer">
@@ -126,7 +126,6 @@
             }
           });
         } else {
-          console.log(moment(this.project.tasks.fieldData.Fecha).isBefore(this.now, 'day'))
           if (moment(this.project.tasks.fieldData.Fecha).isBefore(this.now, 'day')) {
             Swal.fire({
               icon: "error",
@@ -198,6 +197,9 @@
   </script>
   
   <style scoped>
+  .project-item{
+    display: flex;
+  }
   .estado {
     font-size: 14px;
     padding: 1% 0;
@@ -232,45 +234,39 @@
     width: 100%;
   }
   
-  .estado-presupuesto {
-    background-color: rgb(144, 147, 229);
-  }
-  
   .estado-rechazado {
-    background-color: rgb(235, 64, 149);
+    background-color: #FF2712;
   }
   
-  .estado-pdte-firma {
-    background-color: rgb(235, 64, 64);
+  .estado-pendiente {
+    background-color: #FFA39E;
   }
   
-  .estado-pedido {
-    background-color: rgb(5, 241, 95);
+  .estado-diseño {
+    background-color:#AE00F0;
   }
   
-  .estado-ejecutado {
-    background-color: rgb(1, 143, 58);
+  .estado-parado {
+    background-color: #4D4D4D;
   }
   
-  .estado-impago {
-    background-color: rgb(177, 0, 0);
+  .estado-aceptado {
+    background-color: #C2E5A6;
+  }
+  
+  .estado-abierto {
+    background-color: #ECBAFE;
+  }
+  
+  .estado-finalizado {
+    background-color: #66B132;
   }
   
   .estado-facturado {
-    background-color: rgb(199, 127, 60);
+    background-color: #FEBB64;
   }
-  
   .estado-terminado {
-    background-color: rgb(203, 231, 157);
-  }
-  
-  .estado-stop-obra,
-  .estado-obra-parada {
-    background-color: rgb(57, 57, 57);
-  }
-  
-  .estado-producido {
-    background-color: rgb(84, 66, 4);
+    background-color: #FFFA83;
   }
   
   .btn-pressed {

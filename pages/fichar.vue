@@ -155,7 +155,6 @@ export default {
 
         this.ficha = response;
         this.fichaId = this.ficha[0].recordId;
-        console.log(this.ficha)
 
       } catch (e) {
         this.error = true;
@@ -171,16 +170,12 @@ export default {
       let userLocation = "";
       try {
         userLocation = await this.getUserLocation();
-        console.log('ubicacion actual: ', userLocation);
         // Resto del código ...
       } catch (e) {
         this.error = true;
         console.log(e);
       }
-      console.log('userLocation');
-      console.log(userLocation);
       if (userLocation) {
-        console.log('prueba');
         try {
           let response = await this.$axios.$post(
             "/api/fichaje/new",

@@ -1,10 +1,10 @@
 <template>
     <nav class="navigation-bar">
-        <div class="navigation-link" v-for="(link, index) in links" :key="index">
+        <div class="navigation-link" v-for="(link, index) in filteredLinks" :key="index">
             <div :class="$nuxt.$route.path == link.link ? 'active' : ''">
                 <nuxt-link :to="link.link" class="navigation-link-button">
                     <b-icon :icon="link.icon"></b-icon>
-                    <div class="link-name">{{ link.name }}</div>
+                    <!-- <div class="link-name">{{ link.name }}</div> -->
                 </nuxt-link>
             </div>
         </div>
@@ -13,6 +13,17 @@
   
 <script>
 export default {
+    computed: {
+        // Esta propiedad calculada filtra los links basados en los permisos del usuario.
+        filteredLinks() {
+            return this.links.filter(link => {
+                if (link.name === 'Proyectos') {
+                    return this.hasProjectAccess();
+                }
+                return true;
+            });
+        }
+    },
     data() {
         return {
             links: [
@@ -35,14 +46,28 @@ export default {
                     color: "standard",
                 },
                 {
-                    name: "Previsión",
+                    name: "Tareas",
                     link: "/tareas",
                     icon: "card-checklist",
+                    color: "standard",
+                },
+                {
+                    name: "Vacaciones",
+                    link: "/vacaciones",
+                    icon: "calendar2-day",
                     color: "standard",
                 },
             ],
         };
     },
+    methods: {
+        // Método para verificar si el usuario tiene acceso al tab de proyectos.
+        hasProjectAccess() {
+            // Verifica si el usuario es 'ENCARGADO' o 'GERENTE'.
+            const userRole = this.$store.state.UserInfo.GrupoPermisos;
+            return userRole === 'ENCARGADO' || userRole === 'GERENTE';
+        }
+    }
 };
 </script>
   
@@ -67,14 +92,14 @@ export default {
 
 .navigation-link {
     display: grid;
-    height: 50px;
-    width: 50px;
+    height: 30px;
+    width: 30px;
     margin: 0 5%;
     text-align: center;
 }
 
 .link-name {
-    font-size: 10px;
+    font-size: 0.8em;
     text-align: center;
     text-transform: uppercase;
 }
@@ -84,7 +109,7 @@ export default {
     color: black;
     background-color: transparent;
     border: none;
-    font-size: 27px;
+    font-size: 5vw;
     padding: 0%;
     margin: auto;
 }
