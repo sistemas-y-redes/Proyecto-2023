@@ -644,7 +644,6 @@ export default {
       return count;
     },
     editarHistorico(historial) {
-      console.log(historial);
       if (historial) {
         this.historialAEditar = historial;
         this.historialAEditar.recordId = historial.recordId;

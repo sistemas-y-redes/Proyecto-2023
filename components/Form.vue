@@ -159,7 +159,6 @@ export default {
       this.loading = false;
     },
     async fetchVehicles() {
-      console.log('pruebas')
       try {
         const apiUrl = `/api/visitas/vehicles`;
         const response = await this.$axios.post(apiUrl, {
@@ -210,7 +209,6 @@ export default {
       console.log(error)
     })*/
 
-    console.log(this.tecnicos)
   },
 };
 </script>

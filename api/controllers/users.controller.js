@@ -34,16 +34,16 @@ router.post('/login', async (req, res) => {
     }
 
     // Generamos el token de sesión iniciando sesión en Filemaker mediante el model
-    const token = await usersModel.doLogin(req.body)
+    const user = await usersModel.doLogin(req.body)
 
     // Si el inicio de sesión no es correcto, devolvemos el error
-    if (!token) {
+    if (!user) {
         res.writeHead(401);
         res.end("token nulo");
         return "no hay token";
     }
 
-    res.end(JSON.stringify(token));
+    res.end(JSON.stringify(user));
 })
 
 /**

@@ -271,7 +271,6 @@ export default {
             this.loading = false;
         },
         editarVacacion(vacation) {
-            console.log(vacation);
             this.$bvModal.show('modal-editar-historico');
             this.vacacionActual = vacation.fieldData;
             this.vacacionActual.recordId = vacation.recordId;
@@ -390,6 +389,7 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 3rem;
     /* Centra los elementos en el eje cruzado */
 }
 
@@ -410,6 +410,7 @@ button {
 
 .vacation-detail {
     margin-bottom: 10px;
+    font-size: 0.8rem;
 }
 
 h2 {
@@ -447,6 +448,7 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     color: black;
+    font-size: 0.7rem;
 }
 
 

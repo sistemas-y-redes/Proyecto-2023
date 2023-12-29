@@ -64,8 +64,9 @@ export default {
         
         if (response) {
           this.login = false;
-          this.$cookies.set("TOKEN", response);
-          this.$store.commit('saveUser', credenciales);
+          this.$cookies.set("TOKEN", response.token);
+          this.$store.commit('saveUser', response.username);
+          this.$store.commit('saveUserInfo', response);
           this.$router.push('/');
         }
       } catch (error) {

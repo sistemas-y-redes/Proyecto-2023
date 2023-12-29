@@ -177,9 +177,6 @@ router.post('/:id/seguimiento', [auth.validateAccess], async (req, res) => {
 
 router.post('/vehicles', [auth.validateAccess], async (req, res) => {
     const vehicles = await visitasModel.getVehicles();
-    console.log('controlador :');
-    console.log(vehicles);
-    
     // Si no ha devuelto una visita devuelve error
     if (!vehicles) {
         res.status(400).send('Error message');

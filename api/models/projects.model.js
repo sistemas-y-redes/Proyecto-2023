@@ -35,10 +35,6 @@ projectsModel.getProjects = async (id = "*", search = "") => {
       ResponsableCodigo: id,
     });
   }
-  console.log(process.env.FM_SERVER);
-  console.log(process.env.FM_DATABASE);
-  console.log(query);
-  console.log()
 
   try {
     let respuesta = await axios.get(
@@ -52,7 +48,6 @@ projectsModel.getProjects = async (id = "*", search = "") => {
       }
     );
     const proyectos = respuesta.data;
-    console.log(proyectos);
     return proyectos;
   } catch (error) {
     console.log("Error en encontrar proyectos: " + error);
@@ -205,7 +200,6 @@ projectsModel.insertLocation = async ({ longitude, latitude, altitude }, action)
   const fieldData = {
     fieldData: { Ubicación: `+${latitude}, +${longitude}, +${altitude}`, Cliente: action, FechaHora: moment().format("MM/DD/YYYY HH:mm:ss")},
   };
-  console.log(fieldData)
   const insert = await axios.post(
     `https://${process.env.FM_SERVER}/fmi/data/v1/databases/${process.env.FM_DATABASE}/layouts/UbicacionesAPI/records`,
     fieldData,

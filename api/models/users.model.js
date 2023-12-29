@@ -21,8 +21,8 @@ usersModel.doLogin = async ({ usuario, password }) => {
       visitasModel.usuario = usuario;
     }
 
+
     const fmtoken = respuesta.data.response.token;
-    console.log('fmtoken:', fmtoken);  // Depuración: imprime el fmtoken
 
       const queryBody = {
         "query": [
@@ -45,17 +45,20 @@ usersModel.doLogin = async ({ usuario, password }) => {
     if (!userdata || !userdata.data || !userdata.data.response || !userdata.data.response.data[0]) {
       throw new Error('Datos de usuario inválidos desde la API de FileMaker.');
     }
+    console.log('pruebas');
     console.log(userdata.data)
     let user = {
       username: usuario,
       password,
       fmtoken,
+      GrupoPermisos: userdata.data.response.data[0].fieldData.GrupoPermisos,
       EmpleadoNombre: userdata.data.response.data[0].fieldData.EmpleadoNombre,
       EmpleadoData:userdata.data.response.data[0].fieldData,
     }
     
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "24h" });
-    return token;
+    user.token = token;
+    return user;
 
   } catch (error) {
     console.log('Error:', error);

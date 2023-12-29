@@ -28,18 +28,12 @@ router.use(bodyParser.urlencoded({ extended: true }))
  * @return {JSON}
  */
 router.get("/", [auth.validateAccess], async (req, res) => {
-
-    console.log('estoy en el controlador');
-    console.log(req.user.fmtoken);
     
     projectsModel.fmtoken = req.user.fmtoken;
     
     const id = "*";
     const search = "";
     const projects = await projectsModel.getProjects(id, search);
-
-    console.log('proyectos:');
-    console.log(projects);
 
     if (!projects) {
         res.writeHead(500)

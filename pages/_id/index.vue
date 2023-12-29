@@ -395,7 +395,6 @@ export default {
       let userLocation = "";
       try {
         userLocation = await this.getUserLocation();
-        console.log('ubicacion actual: ', userLocation);
         // Resto del código ...
       } catch (e) {
         this.error = true;
@@ -425,7 +424,6 @@ export default {
               text: `Se ha enviado a Filemaker y será insertado en breves`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                  console.log(response.data);
             this.$router.push(
               `${this.$route.path}/${response.data.replace("/", "")}`
             );
@@ -451,7 +449,6 @@ export default {
             Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
           },
         });
-        console.log(this.visita);
         this.visita.visitaFieldata = this.visita[0].fieldData;
         this.visita.VisitasServicios =
           this.visita[0].portalData.VisitasServicios;
@@ -513,11 +510,9 @@ export default {
       }
     },
     async finishVisita(id) {
-      console.log(id);
       let userLocation = "";
       try {
         userLocation = await this.getUserLocation();
-        console.log('ubicacion actual: ', userLocation);
         Swal.fire({
           title: "Finalizar visita",
           text: "¿Quieres finalizar esta visita?",

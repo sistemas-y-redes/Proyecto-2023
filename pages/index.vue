@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mensaje-bienvenida">
-      <p>Bienvenido a nuestra gestor de tareas {{ this.$store.state.User }}</p>
+      <p>Bienvenido a nuestra gestor de tareas {{ this.$store.state.UserInfo.EmpleadoNombre }}</p>
     </div>
 
     <div class="no-data">
