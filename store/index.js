@@ -13,10 +13,7 @@ export const mutations = {
         localStorage.setItem('User', JSON.stringify(User));
     },
     saveUserInfo(state, UserInfo) {
-        console.log('pruebas variadas');
-        console.log(UserInfo);
         state.UserInfo = UserInfo;
-        console.log(state.UserInfo);
         localStorage.setItem('UserInfo', JSON.stringify(UserInfo));
     },
     insertHora(state, Hora) {

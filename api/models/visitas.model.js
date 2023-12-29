@@ -197,7 +197,6 @@ visitasModel.getVisitaServicio = async (id) => {
     );
 
     const properList = list.data.response.data;
-    console.log("PROPERLIST:" + JSON.stringify(properList))
     return properList;
   } catch (err) {
     console.log(err);
@@ -253,7 +252,6 @@ visitasModel.getVisita = async (id) => {
     );
 
     const properList = list.data.response.data;
-    console.log("properList", properList);
     return properList;
   } catch (err) {
     console.log(err);
@@ -493,7 +491,6 @@ visitasModel.updatevisitas = async (id, req) => {
               },
           }
       );
-      console.log(respuesta);
 
       return respuesta.data.response.modId;
   } catch (err) {
