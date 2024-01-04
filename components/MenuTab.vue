@@ -93,8 +93,10 @@ export default {
 }
 
 .navigation-link {
-    display: grid;
-    height: 30px;
+    display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  height: 50px;
     width: 30px;
     margin: 0 5%;
     text-align: center;

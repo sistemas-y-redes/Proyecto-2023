@@ -106,15 +106,11 @@ export default {
   max-width: 250px;
 }
 #submit {
-  background-color: black;
-  color: var(--color);
-  height: 60px;
+  height: 50px;
   font-size: 18px;
   width: 100%;
-  border: none;
-  text-align: center;
   border-radius: 10px;
-  margin-top: 1rem;
+  color:#0B81FF;
 }
 #submit > {
   margin-top: 16px;

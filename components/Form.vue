@@ -38,8 +38,8 @@
         <b-form-select v-model="selectedVehicle" :options="vehicles"></b-form-select>
       </b-row>
       <!-- Botón de submit -->
-      <b-row class="form-option my-4">
-        <button v-if="this.loading === false" class="mb-4" type="submit" id="submit">
+      <b-row class="form-option my-4" style="padding-bottom: 50px;">
+        <button v-if="this.loading === false" class="mb-4 btn-outline-primary" type="submit" id="submit">
           <b>Añadir</b>
         </button>
         <div v-if="this.loading === true" class="spin"></div>
@@ -131,6 +131,14 @@ export default {
             "deleteHora",
             this.$store.state.Horas.indexOf(formulario)
           );
+          Swal.fire({
+            icon: "success",
+            title: "Enviado a Filemaker",
+            confirmButtonColor: "#000",
+            text: `Se ha enviado a Filemaker y será insertado en breves`,
+          }).then(() => {
+            this.$router.go(-1);
+          });
         })
         .catch((e) => {
           console.log("Error", e);
@@ -143,14 +151,7 @@ export default {
           });
         });
 
-      Swal.fire({
-        icon: "success",
-        title: "Enviado a Filemaker",
-        confirmButtonColor: "#000",
-        text: `Se ha enviado a Filemaker y será insertado en breves`,
-      }).then(() => {
-        window.location.href = window.location.href
-      });
+
 
       this.form.Fecha = "";
       this.form.HoraInicio = "";
@@ -239,12 +240,10 @@ export default {
 }
 
 #submit {
-  background-color: black;
-  color: var(--color);
   height: 50px;
   font-size: 18px;
   width: 100%;
-  border: none;
+  background-color: white;
   border-radius: 10px;
 }
 

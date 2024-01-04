@@ -40,7 +40,7 @@
 
                 <div class="boton-carga-parent">
                     <div class="boton-carga-parent d-flex">
-                        <button v-if="limite < this.visitas.length" style="z-index: 9" class="boton-carga"
+                        <button v-if="limite < this.visitas.length" style="z-index: 1" class="boton-carga"
                             @click="limite += 5">
                             Cargar más
                         </button>
@@ -50,7 +50,7 @@
 
 
 
-                        <button v-if="limite > 5" style="z-index: 9" class="boton-carga" @click="limite -= 5">
+                        <button v-if="limite > 5" style="z-index: 1" class="boton-carga" @click="limite -= 5">
                             Ocultar
                         </button>
                     </div>
@@ -319,6 +319,7 @@ a {
     border-radius: 6px;
     margin-left: 2px;
     margin-right: 2px;
+    padding-bottom: 55px;
 }
 
 .boton-carga {
@@ -330,7 +331,7 @@ a {
     padding: 0.4rem;
     margin-top: 1rem;
     margin-bottom: 1.2rem;
-    z-index: 9;
+    z-index: 1;
 }
 
 .enlace-login button {

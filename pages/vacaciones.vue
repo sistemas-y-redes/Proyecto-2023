@@ -228,13 +228,18 @@ export default {
                     }
                 );
                 if (response) {
-                    Swal.fire({
+                    await Swal.fire({
                         icon: "success",
                         title: "Enviado a Filemaker",
                         confirmButtonColor: "#000",
                         text: `Se ha enviado a Filemaker y será insertado en breves`,
+                    }).then(() => {
+                        // Resetear el formulario
+                        this.resetFormulario();
+                        // Actualizar la lista de vacaciones
+                        this.getVacaciones();
                     });
-                    window.location.href = window.location.href
+
                 }
             } catch (e) {
                 Swal.fire({
@@ -305,13 +310,19 @@ export default {
                     }
                 );
                 if (response) {
-                    Swal.fire({
+                    await Swal.fire({
                         icon: "success",
                         title: "Enviado a Filemaker",
                         confirmButtonColor: "#000",
                         text: `Se ha enviado a Filemaker y será actualizado en breves`,
+                    }).then(() => {
+                        this.$bvModal.hide('modal-editar-historico');
+                        this.vacacionActual = {};
+                        // Actualizar la lista de vacaciones
+                        this.getVacaciones();
                     });
-                    window.location.href = window.location.href
+                    // Resetear el formulario
+
                 }
             } catch (e) {
                 Swal.fire({
@@ -329,6 +340,13 @@ export default {
         cancelarEdicion() {
             this.$bvModal.hide('modal-editar-historico');
             this.vacacionActual = [];
+        },
+        resetFormulario() {
+            this.startDate = null;
+            this.endDate = null;
+            this.vacationReason = '';
+            this.notas = '';
+            // Cualquier otro estado o propiedad que necesites resetear
         }
     },
     mounted() {
@@ -390,6 +408,7 @@ button {
     flex-direction: column;
     align-items: center;
     font-size: 3rem;
+    padding-bottom: 50px;
     /* Centra los elementos en el eje cruzado */
 }
 
@@ -406,6 +425,10 @@ button {
 .vacationForm {
     border: 1px solid #ccc;
     border-radius: 8px;
+    max-height: 750px;
+    overflow-y: auto;
+    /* Habilita el scroll vertical si es necesario */
+    padding-bottom: 50px;
 }
 
 .vacation-detail {

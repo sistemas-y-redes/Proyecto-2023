@@ -36,10 +36,9 @@
         ></b-form-textarea>
       </b-row>
       <!-- Botón de submit -->
-      <b-row class="form-option my-4">
+      <b-row class="form-option my-4 btn btn-outline-primary">
         <button
           v-if="this.loading === false"
-          class="mb-4"
           type="submit"
           id="submit"
         >
@@ -154,13 +153,12 @@ export default {
   height: 150px;
 }
 #submit {
-  background-color: black;
-  color: var(--color);
   height: 50px;
   font-size: 18px;
   width: 100%;
   border: none;
   border-radius: 10px;
+  color:#0B81FF;
 }
 .margin-top {
   margin-top: 150px;
