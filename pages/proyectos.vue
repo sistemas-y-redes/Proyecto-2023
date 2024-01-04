@@ -15,9 +15,12 @@
 
         <!-- Lista -->
         <b-row>
-          <b-spinner v-if="loading" class="loader" variant="danger"></b-spinner>
+          <div v-if="loading" class="loader-container">
+            <b-spinner v-if="loading" class="loader" ></b-spinner>
+          </div>
+
           <ul>
-            <li v-for="(project, index) in filteredProjects" :key="index" v-if="render">
+            <li v-for="(project, index) in filteredProjects" :key="index" >
               <ListsItemProject @loadProject="loadProject" :project="project" />
               <hr />
             </li>
@@ -82,9 +85,13 @@ export default {
       );
     },
     filteredProjects() {
-      const filtered = this.projects.filter(project => project.fieldData.Estado !== 'TERMINADO');
-      return filtered;
-    },
+    return this.projects.filter(project => {
+      const projectName = project.fieldData.NombreEmpresa;
+      // Retorna proyectos que no están terminados y, si hay término de búsqueda, que coinciden con la búsqueda
+      return project.fieldData.Estado !== 'TERMINADO' &&
+             (this.search.trim() === '' || (projectName && projectName.toLowerCase().includes(this.search.toLowerCase())));
+    });
+  },
   },
   methods: {
     loadProject(project) {
@@ -120,7 +127,6 @@ export default {
 
         this.projects = response.response.data;
         this.loading = false;
-        this.render = true;
 
       } catch (e) {
         this.error = true;
@@ -148,16 +154,11 @@ export default {
   },
   created() {
     this.getProjects();
-    // Event Listener
-    // this.$nuxt.$on("clickAddTask", (project) => {
-    //   this.projectToAddTask = project;
-    // });
   },
 };
 </script>
 
 <style scoped>
-
 li {
   list-style: none;
   padding: 2% 0;
@@ -169,5 +170,11 @@ li {
 
 ul {
   padding: 0 4%;
+}
+.loader-container {
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  width: 100%;
 }
 </style>

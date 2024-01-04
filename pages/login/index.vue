@@ -80,7 +80,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .login {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -106,11 +106,15 @@ export default {
   max-width: 250px;
 }
 #submit {
-  height: 50px;
+  background-color: black;
+  color: var(--color);
+  height: 60px;
   font-size: 18px;
   width: 100%;
+  border: none;
+  text-align: center;
   border-radius: 10px;
-  color:#0B81FF;
+  margin-top: 1rem;
 }
 #submit > {
   margin-top: 16px;
