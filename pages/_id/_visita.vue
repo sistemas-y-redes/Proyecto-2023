@@ -233,7 +233,7 @@
                   </form>
                 </b-modal>
                 <div class="boton-carga-parent">
-                  <button v-if="limite < visita.VisitasLineas.length" style="z-index: 9" class="boton-carga"
+                  <button v-if="limite < visita.VisitasLineas.length" style="z-index: 1" class="boton-carga"
                     @click="limite += 5">
                     Cargar más
                   </button>
@@ -241,7 +241,7 @@
                   <span class="ml-1" v-if="limite >= visita.VisitasLineas.length">Límite {{ historicoLength() }} registros
                     alcanzado</span>
 
-                  <button v-if="limite > 5" style="z-index: 9" class="boton-carga" @click="limite -= 5">
+                  <button v-if="limite > 5" style="z-index: 1" class="boton-carga" @click="limite -= 5">
                     Ocultar
                   </button>
                 </div>
@@ -329,7 +329,7 @@
                   </div>
                 </div>
                 <div class="boton-carga-parent">
-                  <button v-if="limite < visita.VisitasLineas.length" style="z-index: 9" class="boton-carga"
+                  <button v-if="limite < visita.VisitasLineas.length" style="z-index: 1" class="boton-carga"
                     @click="limite += 5">
                     Cargar más
                   </button>
@@ -337,7 +337,7 @@
                   <span class="ml-1" v-if="limite >= visita.VisitasLineas.length">Límite {{ materialesLength() }}
                     registros alcanzado</span>
 
-                  <button v-if="limite > 5" style="z-index: 9" class="boton-carga" @click="limite -= 5">
+                  <button v-if="limite > 5" style="z-index: 1" class="boton-carga" @click="limite -= 5">
                     Ocultar
                   </button>
                 </div>
@@ -414,7 +414,7 @@
         pestañaActiva == 'Histórico' &&
         this.loading === false &&
         visita.visitaFieldata.EstadoServicio == 'PENDIENTE'
-        " class="añadir" style="padding-bottom: 60px;">
+        " class="añadir" style="padding-bottom: 70px;">
         <b-icon @click="FormActive = true" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>
 
@@ -423,7 +423,7 @@
         pestañaActiva === 'Adjuntos' &&
         this.loading === false &&
         visita.visitaFieldata.EstadoServicio == 'PENDIENTE'
-        " class="añadir" style="padding-bottom: 60px;">
+        " class="añadir" style="padding-bottom: 70px;">
         <label>
           <b-icon style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
           <b-form-file style="display: none" :state="Boolean(archivoSubir)" accept=".jpg, .png, .pdf, .webp, .jpeg"
@@ -437,7 +437,7 @@
         pestañaActiva === 'Materiales' &&
         this.loading === false &&
         visita.visitaFieldata.EstadoServicio == 'PENDIENTE'
-        " class="añadir" style="padding-bottom: 60px;">
+        " class="añadir" style="padding-bottom: 70px;">
         <b-icon @click="FormActive = true" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>
     </div>

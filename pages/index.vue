@@ -215,6 +215,7 @@ a {
   border-radius: 6px;
   margin-left: 2px;
   margin-right: 2px;
+  padding-bottom: 55px;
 }
 
 .boton-carga {
@@ -226,7 +227,7 @@ a {
   padding: 0.4rem;
   margin-top: 1rem;
   margin-bottom: 1.2rem;
-  z-index: 9;
+  z-index: 1;
 }
 
 .enlace-login button {

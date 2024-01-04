@@ -222,7 +222,7 @@
                   </div> -->
                 </div>
                 <div class="boton-carga-parent">
-                  <button v-if="limite < visita.VisitasServicios.length" style="z-index: 9" class="boton-carga"
+                  <button v-if="limite < visita.VisitasServicios.length" style="z-index: 1" class="boton-carga"
                     @click="limite += 5">
                     Cargar más
                   </button>
@@ -231,7 +231,7 @@
                     visita.VisitasServicios.length }} registros
                     alcanzado</span>
 
-                  <button v-if="limite > 5" style="z-index: 9" class="boton-carga" @click="limite -= 5">
+                  <button v-if="limite > 5" style="z-index: 1" class="boton-carga" @click="limite -= 5">
                     Ocultar
                   </button>
                 </div>
@@ -270,7 +270,7 @@
         </div>
       </div>
       <!-- Botón de  en Visita -->
-      <div v-if="pestañaActiva === 'Visita' && this.loading === false" class="añadir" style="padding-bottom: 60px;">
+      <div v-if="pestañaActiva === 'Visita' && this.loading === false" class="añadir" style="padding-bottom: 70px;">
         <b-icon @click="crearVisita()" style="width: 60px; height: 60px" icon="plus-circle-fill"></b-icon>
       </div>
     </div>
