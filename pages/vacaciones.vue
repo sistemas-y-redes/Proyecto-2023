@@ -467,7 +467,7 @@ h2 {
 }
 
 .estado-container {
-    white-space: nowrap;
+    word-wrap:break-word;
     overflow: hidden;
     text-overflow: ellipsis;
     color: black;
