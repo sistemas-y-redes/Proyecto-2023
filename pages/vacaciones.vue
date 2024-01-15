@@ -25,11 +25,7 @@
                 <select class="form-select" v-model="vacationReason">
                     <option disabled value="">Por favor seleccione uno</option>
                     <option>Vacaciones</option>
-                    <option>Baja</option>
                     <option>Día libre</option>
-                    <option>Ausencia injustificada</option>
-                    <option>Formación</option>
-                    <option>No trabajado</option>
                     <!-- Agrega más motivos aquí -->
                 </select>
             </div>
@@ -99,11 +95,7 @@
                             <select class="form-select" v-model="vacacionActual.Motivo">
                                 <option disabled value="">Por favor seleccione uno</option>
                                 <option>Vacaciones</option>
-                                <option>Baja</option>
                                 <option>Día libre</option>
-                                <option>Ausencia injustificada</option>
-                                <option>Formación</option>
-                                <option>No trabajado</option>
                                 <!-- Agrega más motivos aquí -->
                             </select>
                         </b-row>
@@ -123,7 +115,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 import Swal from "sweetalert2";
 import Datepicker from 'vuejs-datepicker';
@@ -230,9 +222,9 @@ export default {
                 if (response) {
                     await Swal.fire({
                         icon: "success",
-                        title: "Enviado a Filemaker",
+                        title: "Petición de Vacaciones realizada",
                         confirmButtonColor: "#000",
-                        text: `Se ha enviado a Filemaker y será insertado en breves`,
+                        text: `Se ha enviado la solicitud de vacaciones correctamente`,
                     }).then(() => {
                         // Resetear el formulario
                         this.resetFormulario();
@@ -312,9 +304,9 @@ export default {
                 if (response) {
                     await Swal.fire({
                         icon: "success",
-                        title: "Enviado a Filemaker",
+                        title: "Actualización de vacaciones realizada",
                         confirmButtonColor: "#000",
-                        text: `Se ha enviado a Filemaker y será actualizado en breves`,
+                        text: `Se ha enviado la actualización de vacaciones correctamente`,
                     }).then(() => {
                         this.$bvModal.hide('modal-editar-historico');
                         this.vacacionActual = {};
@@ -354,7 +346,7 @@ export default {
     },
 }
 </script>
-  
+
 <style scoped>
 /* Estilos generales para móviles */
 div {
