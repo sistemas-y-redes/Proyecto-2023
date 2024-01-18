@@ -150,7 +150,7 @@
               <b-col class="pestaña" :class="this.pestañaActiva === 'Adjuntos' ? 'active' : 'inactive'
                 " @click="cambiarPestaña('Adjuntos')"><b-icon icon="file-earmark"></b-icon> Adjuntos</b-col>
               <b-col class="pestaña" :class="this.pestañaActiva === 'Materiales' ? 'active' : 'inactive'
-                " @click="cambiarPestaña('Materiales')"><b-icon icon="file-earmark"></b-icon> Materiales</b-col>
+                " @click="cambiarPestaña('Materiales')"><b-icon icon="file-earmark"></b-icon> Material</b-col>
             </div>
 
             <!-- Contenido de seguimientos -->
@@ -223,10 +223,16 @@
                       <b-form-textarea v-model="historialAEditar['VisitasLineas::DescripciónArt']" class="textarea"
                         placeholder="Introduce la acción realizada" required></b-form-textarea>
                     </b-row>
+                    <!-- Input de Descripción -->
+                    <b-row class="form-option my-3">
+                      <label>Vehículo</label>
+                      <b-form-select v-model="historialAEditar['VisitasServicios::Veh']" :options="vehicles"
+                        ></b-form-select>
+                    </b-row>
 
                     <!-- Botón para guardar cambios -->
                     <b-row class="form-option my-4">
-                      <b-button variant="outline-primary" type="submit" >
+                      <b-button variant="outline-primary" type="submit">
                         Guardar Cambios
                       </b-button>
                     </b-row>
@@ -483,10 +489,12 @@ export default {
         'VisitasLineas::HoraInicioReal': '',
         'VisitasLineas::HoraFinReal': '',
         'VisitasLineas::DescripciónArt': '',
-        'recordId': ''
+        'recordId': '',
+        'VisitasServicios::Veh': '',
         // Asegúrate de incluir todas las propiedades que necesites
       },
       tecnicos: [],
+      vehicles: [],
     };
   },
   methods: {
@@ -610,6 +618,24 @@ export default {
         console.log("Error", error);
       }
     },
+    async fetchVehicles() {
+      try {
+        const apiUrl = `/api/visitas/vehicles`;
+        const response = await this.$axios.post(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${this.$cookies.get("TOKEN")}`,
+          },
+        });
+        // Asumiendo que la respuesta es un array de vehículos
+        this.vehicles = response.data.map(vehicle => ({
+          value: vehicle.fieldData.IdRecurso,
+          text: vehicle.fieldData.Nombre
+        }));
+
+      } catch (error) {
+        console.error(error);
+      }
+    },
     corregirHoras(Hora) {
       if (Hora == "") return "-";
       let horaFinal = Hora.slice(0, -3);
@@ -645,6 +671,7 @@ export default {
     },
     editarHistorico(historial) {
       if (historial) {
+        console.log(historial);
         this.historialAEditar = historial;
         this.historialAEditar.recordId = historial.recordId;
         this.tecnicos = [{ value: this.historialAEditar['VisitasLineas::Tec'], text: this.historialAEditar['VisitasLineas::TecNom'] }];
@@ -661,7 +688,8 @@ export default {
         'VisitasLineas::HoraInicioReal': '',
         'VisitasLineas::HoraFinReal': '',
         'VisitasLineas::DescripciónArt': '',
-        'recordId': ''
+        'recordId': '',
+        'VisitasServicios::Veh': ''
         // Asegúrate de incluir todas las propiedades que necesites
       };
     },
@@ -680,9 +708,9 @@ export default {
         DescripciónArt: this.historialAEditar['VisitasLineas::DescripciónArt'],
         HoraInicioReal: this.historialAEditar['VisitasLineas::HoraInicioReal'],
         HoraFinReal: this.historialAEditar['VisitasLineas::HoraFinReal'],
+        Veh: this.historialAEditar['VisitasServicios::Veh'],
 
       };
-      console.log(data);
       try {
         let response = this.$axios.$patch(
           `/api/visitas/edit/${this.historialAEditar.recordId}`, data,
@@ -698,8 +726,11 @@ export default {
             title: "Enviado a Filemaker",
             confirmButtonColor: "#000",
             text: `Se ha enviado a Filemaker y será actualizado en breves`,
+          }).then(() => {
+            this.$bvModal.hide('modal-editar-historico');
+            this.resetModal();
           });
-          window.location.href = window.location.href
+
         }
       } catch (e) {
         Swal.fire({
@@ -719,6 +750,7 @@ export default {
     if (!this.$cookies.get("TOKEN")) this.$router.push("/login");
 
     await this.getVisita();
+    this.fetchVehicles()
     this.loading = false;
   },
   components: { FormMateriales, Form },
@@ -769,7 +801,7 @@ export default {
 }
 
 .opciones-pestañas {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(4, 1fr);
   font-weight: bolder;
   max-width: 400px;
@@ -778,7 +810,7 @@ export default {
 
 .opciones-pestañas>* {
   text-align: center;
-  width: 128px;
+  width: 33%;
   padding: 0.4rem;
   border-radius: 0.1rem;
   font-size: 14px;

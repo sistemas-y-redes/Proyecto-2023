@@ -161,7 +161,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 export default {
     middleware: 'authentication',
@@ -226,7 +226,7 @@ export default {
     },
 };
 </script>
-  
+
 <style>
 a {
     text-decoration: none !important;
@@ -368,4 +368,3 @@ a {
     /* Tamaño del icono */
     margin-bottom: 5px;
 }</style>
-  

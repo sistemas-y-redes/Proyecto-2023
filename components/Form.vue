@@ -3,7 +3,7 @@
     <form class="new-data-form" @submit.prevent="handleSubmit()">
       <!-- Input de Fecha -->
       <b-row class="form-option my-4">
-        <label v-if="!errorFecha">Fecha</label>
+        <label v-if="!errorFecha">Fechaaaa</label>
         <label v-else>Fecha <span>Debes introducir una fecha válida</span></label>
         <b-form-datepicker v-model="form.Fecha" :value="min" :min="min" class="form-input" type="text" name="fecha"
           :placeholder="form.Fecha" disabled />
@@ -35,7 +35,7 @@
       </b-row>
       <b-row class="form-option my-3">
         <label>Vehículo</label>
-        <b-form-select v-model="selectedVehicle" :options="vehicles"></b-form-select>
+        <b-form-select v-model="form.selectedVehicle" :options="vehicles"></b-form-select>
       </b-row>
       <!-- Botón de submit -->
       <b-row class="form-option my-4" style="padding-bottom: 50px;">
@@ -66,7 +66,7 @@ export default {
     return {
       tecnicos: [],
       form: {
-        Fecha: new Date().toISOString().slice(0, 10),
+        Fecha: "",
         HoraInicio: "",
         HoraFin: "",
         Descripcion: this.visita[0].fieldData.TrabajoRealizado,
@@ -74,6 +74,7 @@ export default {
         NumeroServicio: this.visita[0].fieldData["NumeroServicio"],
         Tec: this.$store.state.User,
         Tipo: "M.Obra",
+        selectedVehicle: "",
       },
       numeroTecnico: this.$store.state.User,
       nombreTecnico: this.visita[0].fieldData.TécnicoNombre,
@@ -85,7 +86,6 @@ export default {
       loading: false,
       tecnicoSeleccionado: "",
       vehicles: [], // Añadir esta línea
-      selectedVehicle: null,
     };
   },
   methods: {
@@ -183,6 +183,15 @@ export default {
       let minutes = now.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
     },
+    convertirFecha(fechaOriginal) {
+    // Dividir la fecha original en sus componentes
+    var partes = fechaOriginal.split('/');
+
+    // Reordenar los componentes y formatear la fecha
+    var fechaFormateada = partes[2] + '-' + partes[0] + '-' + partes[1];
+
+    return fechaFormateada;
+}
   },
   mounted() {
     this.fetchVehicles(),
@@ -198,6 +207,7 @@ export default {
     // Aqui se le asigna por defecto como tecnico el tecnico que se a logeado
     this.tecnicoSeleccionado = this.$store.state.User;
     this.form.HoraInicio = this.getCurrentTime();
+    this.form.Fecha = this.convertirFecha(this.visita[0].fieldData["FechaPrevista"]);
 
     // Obtener técnicos
     /*this.$axios.$get("/api/usuarios/list", {

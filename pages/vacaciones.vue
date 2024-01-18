@@ -290,10 +290,6 @@ export default {
         });
       }
 
-      console.log("buenas tardes");
-      console.log(this.formatearFecha(vacation.FechaDesde));
-      console.log(this.formatearFecha(vacation.FechaHasta));
-
       // Verificar que la fecha de inicio sea menor que la fecha de finalización
       if (this.formatearFecha(vacation.FechaDesde) >= this.formatearFecha(vacation.FechaHasta)) {
         Swal.fire({

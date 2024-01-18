@@ -348,6 +348,7 @@ visitasModel.insertarSeguimiento = async (formulario) => {
       Tec: formulario.Tec,
       Tipo: formulario.Tipo,
       Referencia: formulario.referencia,
+      "VisitasServicios::Veh": formulario.selectedVehicle,
       "VisitasServicios::TrabajoRealizado": formulario.Descripcion,
       'DescripciónArt' : formulario.Descripcion,
     },
@@ -468,18 +469,18 @@ visitasModel.updateVisita = async (id,body) => {
 };
 visitasModel.updatevisitas = async (id, req) => {
 
-  
+
 
   const data = {
       fieldData: {
         "DescripciónArt": req.DescripciónArt,
         "HoraFinReal": req.HoraFinReal,
         "HoraInicioReal": req.HoraInicioReal,
+        "VisitasServicios::Veh": req.Veh
       }
   };
-  console.log(data);
   try {
-    
+
       let respuesta = await axios.patch(
           `https://${serverName}/fmi/data/v1/databases/Acceso/layouts/SeguimientoVisitasAPI/records/${id}`,
           data,
