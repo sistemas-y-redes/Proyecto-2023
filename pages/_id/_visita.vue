@@ -159,8 +159,7 @@
                 <!-- Las horas almacenadas en store -->
 
                 <!-- Contenido de seguimientos -->
-                <div v-for="(Linea, index) in visita.VisitasLineas" :key="index" class="historico row" v-if="Linea['VisitasLineas::Tipo'] === 'M.Obra' ? true : false && Linea
-                  ">
+                <div v-for="(Linea, index) in lineasLimitadas" :key="index" class="historico row">
                   <div class="historico-texto col-7">
                     <b>
                       <p class="historico-tecnico">
@@ -173,7 +172,7 @@
                     }}</span>
                   </div>
                   <div class="historico-tiempo col text-right">
-                    <p class="historico-hora">
+                    <p class="historico-fecha">
                       <b-icon icon="clock"></b-icon>
                       {{
                         corregirHoras(Linea["VisitasLineas::HoraInicioReal"])
@@ -226,8 +225,8 @@
                     <!-- Input de Descripción -->
                     <b-row class="form-option my-3">
                       <label>Vehículo</label>
-                      <b-form-select v-model="historialAEditar['VisitasServicios::Veh']" :options="vehicles"
-                        ></b-form-select>
+                      <b-form-select v-model="historialAEditar['VisitasServicios::Veh']"
+                        :options="vehicles"></b-form-select>
                     </b-row>
 
                     <!-- Botón para guardar cambios -->
@@ -497,7 +496,17 @@ export default {
       vehicles: [],
     };
   },
+  computed: {
+    lineasLimitadas() {
+      const lineasFiltradas = this.visita.VisitasLineas.filter((linea, index) => {
+        return linea['VisitasLineas::Tipo'] === 'M.Obra' && index < this.limite;
+      });
+      console.log(lineasFiltradas); // Para depuración
+      return lineasFiltradas;
+    }
+  },
   methods: {
+
     cambiarPestaña(PestañaSeleccionada) {
       this.pestañaActiva = PestañaSeleccionada;
     },
@@ -723,9 +732,9 @@ export default {
         if (response) {
           Swal.fire({
             icon: "success",
-            title: "Enviado a Filemaker",
+            title: "Visita actualizada",
             confirmButtonColor: "#000",
-            text: `Se ha enviado a Filemaker y será actualizado en breves`,
+            text: `Se ha actualizado la visita correctamente`,
           }).then(() => {
             this.$bvModal.hide('modal-editar-historico');
             this.resetModal();
@@ -833,25 +842,25 @@ export default {
 
 @media (min-height: 600px) and (max-height: 720px) {
   .div-pestaña {
-    height: 400px;
+    height: auto;
   }
 }
 
 @media (min-height: 721px) and (max-height: 800px) {
   .div-pestaña {
-    height: 435px;
+    height: auto;
   }
 }
 
 @media (min-height: 801px) and (max-height: 910px) {
   .div-pestaña {
-    height: 520px;
+    height: auto;
   }
 }
 
 @media (min-height: 911px) {
   .div-pestaña {
-    height: 550px;
+    height: auto;
   }
 }
 
@@ -1088,5 +1097,11 @@ export default {
 
 .historico-editar {
   margin-left: auto;
+}
+
+.lista-historica,
+.lista-adjuntos {
+  padding-bottom: 80px;
+  /* Ajusta este valor según sea necesario */
 }
 </style>

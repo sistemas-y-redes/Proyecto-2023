@@ -419,9 +419,9 @@ export default {
           .then((response) => {
             Swal.fire({
               icon: "success",
-              title: "Enviado a Filemaker",
+              title: "Visita creada",
               confirmButtonColor: "#000",
-              text: `Se ha enviado a Filemaker y será insertado en breves`,
+              text: `Se ha creado la visita correctamente`,
             }).then((result) => {
                 if (result.isConfirmed) {
             this.$router.push(
@@ -431,7 +431,7 @@ export default {
             this.getVisita();
                 }
               });
-            
+
           })
           .catch((error) => {
             console.log(error);
@@ -545,7 +545,7 @@ export default {
               .then((response) => {
                 Swal.fire({
                   icon: "success",
-                  title: "Enviado a Filemaker",
+                  title: "Tarea finalizada",
                   confirmButtonColor: "#000",
                   text: `Tarea finalizada`,
                 }).then((response) => {

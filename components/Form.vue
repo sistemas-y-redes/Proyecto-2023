@@ -3,14 +3,14 @@
     <form class="new-data-form" @submit.prevent="handleSubmit()">
       <!-- Input de Fecha -->
       <b-row class="form-option my-4">
-        <label v-if="!errorFecha">Fechaaaa</label>
+        <label v-if="!errorFecha">Fecha</label>
         <label v-else>Fecha <span>Debes introducir una fecha válida</span></label>
         <b-form-datepicker v-model="form.Fecha" :value="min" :min="min" class="form-input" type="text" name="fecha"
           :placeholder="form.Fecha" disabled />
       </b-row>
       <b-row class="form-option my-3">
         <label>Técnico</label>
-        <b-form-select v-model="tecnicoSeleccionado" :options="tecnicos"></b-form-select>
+        <b-form-select v-model="form.Tec" :options="tecnicos"></b-form-select>
       </b-row>
       <!-- Input de Hora Inicio -->
       <b-row class="form-option my-3">
@@ -72,7 +72,7 @@ export default {
         Descripcion: this.visita[0].fieldData.TrabajoRealizado,
         NumeroServicioVisita: this.visita[0].fieldData["NumeroVisita"],
         NumeroServicio: this.visita[0].fieldData["NumeroServicio"],
-        Tec: this.$store.state.User,
+        Tec: this.$store.state.User.toUpperCase(),
         Tipo: "M.Obra",
         selectedVehicle: "",
       },
@@ -133,9 +133,9 @@ export default {
           );
           Swal.fire({
             icon: "success",
-            title: "Enviado a Filemaker",
+            title: "Visita creada",
             confirmButtonColor: "#000",
-            text: `Se ha enviado a Filemaker y será insertado en breves`,
+            text: `Se ha creado la visita correctamente`,
           }).then(() => {
             this.$router.go(-1);
           });
@@ -195,7 +195,7 @@ export default {
   },
   mounted() {
     this.fetchVehicles(),
-      this.tecnicos.push({ value: this.numeroTecnico, text: this.nombreTecnico })
+      this.tecnicos.push()
     if (this.visita.visitaFieldata["Visitas::Tec2"]) this.tecnicos.push({ value: this.visita.visitaFieldata["Visitas::Tec2"], text: this.visita.visitaFieldata["Visitas::TecNom2"] })
     if (this.visita.visitaFieldata["Visitas::Tec3"]) this.tecnicos.push({ value: this.visita.visitaFieldata["Visitas::Tec3"], text: this.visita.visitaFieldata["Visitas::TecNom3"] })
     if (this.visita.visitaFieldata["Visitas::Tec4"]) this.tecnicos.push({ value: this.visita.visitaFieldata["Visitas::Tec4"], text: this.visita.visitaFieldata["Visitas::TecNom4"] })
@@ -208,6 +208,10 @@ export default {
     this.tecnicoSeleccionado = this.$store.state.User;
     this.form.HoraInicio = this.getCurrentTime();
     this.form.Fecha = this.convertirFecha(this.visita[0].fieldData["FechaPrevista"]);
+    console.log(this.numeroTecnico);
+    console.log(this.nombreTecnico);
+    console.log(this.tecnicoSeleccionado);
+    console.log(this.tecnicos);
 
     // Obtener técnicos
     /*this.$axios.$get("/api/usuarios/list", {
