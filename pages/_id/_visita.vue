@@ -382,7 +382,7 @@
 
         <!-- Componente form activo -->
         <div v-if="FormActive && this.pestañaActiva === 'Histórico'">
-          <div @click="
+          <div  @click="
             FormActive = false;
           getVisita();
           loading = true;
@@ -391,7 +391,7 @@
             <span>VOLVER</span>
           </div>
           <!-- Formulario componente -->
-          <Form :visita="visita" :pestañaActiva="pestañaActiva" />
+          <Form @formSubmitted="handleFormSubmitted" :visita="visita" :pestañaActiva="pestañaActiva" />
         </div>
 
         <div v-if="FormActive && this.pestañaActiva === 'Materiales'">
@@ -506,7 +506,12 @@ export default {
     }
   },
   methods: {
-
+    handleFormSubmitted() {
+      // Aquí va la lógica que antes tenías en el @click del botón
+      this.FormActive = false;
+      this.getVisita();
+      this.loading = true;
+    },
     cambiarPestaña(PestañaSeleccionada) {
       this.pestañaActiva = PestañaSeleccionada;
     },
@@ -732,9 +737,9 @@ export default {
         if (response) {
           Swal.fire({
             icon: "success",
-            title: "Visita actualizada",
+            title: "Parte de trabajo actualizado",
             confirmButtonColor: "#000",
-            text: `Se ha actualizado la visita correctamente`,
+            text: `Se ha actualizado el parte de trabajo correctamente`,
           }).then(() => {
             this.$bvModal.hide('modal-editar-historico');
             this.resetModal();

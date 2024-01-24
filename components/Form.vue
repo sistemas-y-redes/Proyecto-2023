@@ -133,11 +133,11 @@ export default {
           );
           Swal.fire({
             icon: "success",
-            title: "Visita creada",
+            title: "Parte de trabajo registrado",
             confirmButtonColor: "#000",
-            text: `Se ha creado la visita correctamente`,
+            text: `Se han registrado las horas`,
           }).then(() => {
-            this.$router.go(-1);
+            this.$emit('formSubmitted');
           });
         })
         .catch((e) => {
@@ -184,14 +184,14 @@ export default {
       return `${hours}:${minutes}`;
     },
     convertirFecha(fechaOriginal) {
-    // Dividir la fecha original en sus componentes
-    var partes = fechaOriginal.split('/');
+      // Dividir la fecha original en sus componentes
+      var partes = fechaOriginal.split('/');
 
-    // Reordenar los componentes y formatear la fecha
-    var fechaFormateada = partes[2] + '-' + partes[0] + '-' + partes[1];
+      // Reordenar los componentes y formatear la fecha
+      var fechaFormateada = partes[2] + '-' + partes[0] + '-' + partes[1];
 
-    return fechaFormateada;
-}
+      return fechaFormateada;
+    }
   },
   mounted() {
     this.fetchVehicles(),
