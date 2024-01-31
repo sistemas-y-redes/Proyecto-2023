@@ -9,7 +9,7 @@
     </div>
     <div class="mx-4" >
       <div v-if="!this.ficha && this.loading === false">
-        Este técnico no ha fichado día {{ this.formatearFecha(this.dia) }}, ¿deseas fichar?
+        No se ha fichado el dia {{ this.formatearFecha(this.dia) }}, ¿deseas fichar?
         <div class="w-100 d-flex mt-2"><b-button variant="primary" class="mx-auto" @click="setFichaje()">Fichar</b-button>
         </div>
       </div>
